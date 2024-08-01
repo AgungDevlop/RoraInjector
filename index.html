@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Video</title>
+    <!-- Include Tailwind CSS -->
+ <!-- Add this script tag after the Firebase script tags in the head section -->
+    
+ <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Add this script tag to include SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body,
+        h1,
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+
+        .video-thumbnail {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1;
+        }
+
+        .loading-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            animation: loadingAnimation 1.5s infinite;
+        }
+
+        @keyframes loadingAnimation {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin-right: 10px;
+        }
+    </style>
+    
+
+</head>
+
+<body class="bg-gray-100 p-2">
+
+<header class="w-full bg-indigo-600 text-center text-white p-4">
+    <h1 id="title" class="text-4xl font-bold mb-6">Simontok 2024</h1>
+    <div class="relative text-gray-600">
+        <input id="searchInput" type="search" name="search" placeholder="Cari video..."
+            class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-64">
+        <button id="searchButton" type="button" class="absolute right-0 top-0 mt-3 mr-4 ml-3">
+            <i class="fas fa-search text-white text-lg"></i>
+        </button>
+    </div>
+</header>
+
+
+  <!-- Main Content -->
+<main class="container mx-auto mt-8 p-2 bg-white rounded shadow-lg">
+  <div class="aspect-w-16 aspect-h-9">
+     <h1 id="videoTitle" class="text-2xl mt-8 font-bold">Video Title<h1>
+    <video id="video-id" class="w-full h-full" controls preload="metadata" allowfullscreen>
+      <source id="playVideo" type="video/mp4" />
+    </video>
+  </div>
+</main>
+
+
+ <h1 class="text-2xl mt-8 font-bold">Video Lainya</h1>
+<div id="videoPlaylist" class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"></div>
+<div id="noResults" class="text-center mt-5 text-red-500 hidden">Video yang dicari tidak tersedia.</div>
+<div class="pagination flex justify-center items-center mt-5">
+    <span id="pageNumbers" class="mx-4"></span>
+</div>
+
+<div id="onlineUsers" class="fixed bottom-4 left-4 bg-blue-500 text-white p-2 rounded-full">
+    <i class="fas fa-user"></i> <span id="onlineUsersCount">0</span> User Online
+</div>
+
+<footer class="bg-indigo-600 mt-3 text-white p-4 text-center">
+    <p id="copyrightText" class="text-sm">
+        ©Copyright By Simontok Indo 2024
+    </p>
+</footer>
+
+
+
+<script type="module">
+
+  
+    const urlParams = new URLSearchParams(window.location.search);
+    const apiKey = urlParams.get('key');
+    
+    const randomId = getRandomIdFromUrl();
+
+    
+    const videoUrl = sessionStorage.getItem('videoUrl');
+    const videoTitle = sessionStorage.getItem('videoTitle');
+    const pageTitle = document.title = videoTitle;
+    
+if (pageTitle == null){
+  document.title = "Play Video";
+}
+    
+if (videoUrl) {
+const videoPlayer = document.getElementById('playVideo');
+    videoPlayer.src = videoUrl;
+    videoPlayer.addEventListener('loadedmetadata', function() {
+        videoPlayer.play();
+    });
+      document.getElementById('videoTitle').innerText = videoTitle;
+} else {
+  console.error('No video URL found in sessionStorage');
+}
+
+
+
+
+
+
+function processVideoFromRandomId(videos) {
+  const randomId = getRandomIdFromUrl(); // Ambil randomId dari URL
+  const mainElement = document.querySelector('main.container');
+
+  if (randomId) {
+    const video = videos.find(video => video.id === randomId); // Cari video berdasarkan ID
+
+    if (video) {
+      // Dapatkan URL dan Judul video dari data JSON
+      const videoUrl = video.Url;
+      const videoTitle = video.Judul;
+
+      // Hapus konten lama di mainElement jika ada
+      mainElement.innerHTML = '';
+
+      // Buat elemen baru
+      const containerDiv = document.createElement('div');
+      containerDiv.className = 'aspect-w-16 aspect-h-9';
+
+      const titleElement = document.createElement('h1');
+      titleElement.id = 'videoTitle';
+      titleElement.className = 'text-2xl mt-8 font-bold';
+      titleElement.innerText = videoTitle;
+
+      const videoElement = document.createElement('video');
+      videoElement.id = 'video-id';
+      videoElement.className = 'w-full h-full';
+      videoElement.controls = true;
+      videoElement.preload = 'metadata';
+      videoElement.allowFullscreen = true;
+
+      const sourceElement = document.createElement('source');
+      sourceElement.id = 'playVideo';
+      sourceElement.type = 'video/mp4';
+      sourceElement.src = videoUrl;
+
+      // Append source to video and video to container
+      videoElement.appendChild(sourceElement);
+      containerDiv.appendChild(titleElement);
+      containerDiv.appendChild(videoElement);
+
+      // Append the new elements to the mainElement
+      mainElement.appendChild(containerDiv);
+
+      // Inisialisasi Fluid Player setelah elemen video ditambahkan
+      var myFP = fluidPlayer(
+        'video-id', {
+          "layoutControls": {
+            "controlBar": {
+              "autoHideTimeout": 3,
+              "animated": true,
+              "autoHide": true
+            },
+            "htmlOnPauseBlock": {
+              "html": null,
+              "height": null,
+              "width": null
+            },
+            "autoPlay": false,
+            "mute": true,
+            "allowTheatre": true,
+            "playPauseAnimation": false,
+            "playbackRateEnabled": false,
+            "allowDownload": false,
+            "playButtonShowing": true,
+            "fillToContainer": false,
+            "posterImage": ""
+          },
+          "vastOptions": {
+            "adList": [],
+            "adCTAText": false,
+            "adCTATextPosition": ""
+          }
+        }
+      );
+
+      // Play video once metadata is loaded
+      videoElement.addEventListener('loadedmetadata', function() {
+        videoElement.play();
+      });
+
+    } else {
+      console.error('Video not found for the given randomId.');
+      // Menyembunyikan elemen main jika video tidak ditemukan
+      if (mainElement) {
+        mainElement.style.display = 'none';
+      }
+    }
+  } else {
+    console.error('Random ID not found in URL.');
+    // Menyembunyikan elemen main jika random ID tidak ditemukan
+    if (mainElement) {
+      mainElement.style.display = 'none';
+    }
+  }
+}
+
+
+
+
+
+
+  const apiUrl = 'https://raw.githubusercontent.com/AgungDevlop/Viral/main/Video.json';
+  let videos = [];
+  let currentPage = 1;
+  const videosPerPage = 10;
+      // Load video list from JSON for the specified key
+
+
+// Fungsi untuk mengacak array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Fetch JSON data
+fetch(apiUrl)
+  .then(response => response.json())
+  .then(data => {
+    videos = shuffleArray(data); // Mengacak urutan video
+
+    loadVideos(currentPage);
+    renderPageNumbers();
+    processVideoFromRandomId(videos);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+
+
+function getRandomIdFromUrl() {
+  const hash = window.location.hash;
+  if (hash.startsWith('#/')) {
+    return hash.substring(2); // Menghapus '#/' dari awal dan mengambil sisanya sebagai ID
+  }
+  return null;
+}
+
+
+   if (apiKey === 's1m0ntox' || randomId) {
+  
+
+window.formatCount = function(count) {
+  if (count >= 1000) {
+    return (count / 1000).toFixed(1) + 'K';
+  } else {
+    return count.toString();
+  }
+  };
+
+
+
+window.loadVideos = function(page) {
+  const start = (page - 1) * videosPerPage;
+  const end = start + videosPerPage;
+  const currentVideos = videos.slice(start, end);
+  const playlistContainer = document.getElementById('videoPlaylist');
+  playlistContainer.innerHTML = '';
+
+  currentVideos.forEach(video => {
+    const videoTitleWithExtension = video.Judul;
+    const videoTitle = videoTitleWithExtension.replace(/\.[^/.]+$/, ""); // Removes file extension
+    const videoUrl = video.Url;
+    const videoId = video.id;
+
+    const videoElement = document.createElement('div');
+    videoElement.classList.add('video-thumbnail', 'relative');
+    videoElement.innerHTML = `
+      <div class="bg-white p-4 rounded-lg shadow-md flex flex-col">
+        <h2 class="text-xl font-bold mb-2">${videoTitle}</h2>
+        <div class="aspect-w-16 aspect-h-9 relative">
+          <div class="loading-overlay">
+            <div class="loading-placeholder"></div>
+          </div>
+          <video id="data-video" class="w-full h-40 object-cover" preload="metadata" onloadedmetadata="captureThumbnail(this)">
+            <source src="${videoUrl}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="flex justify-between items-center mt-4">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded"
+            onclick="playVideos('${videoId}', '${videoTitle}')">
+            <i class="fas fa-play"></i> Play Video
+          </button>
+          <button onclick="download('${videoUrl}', '${videoTitle}')" rel="noopener noreferrer"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-1 rounded">
+            <i class="fas fa-download"></i> Download
+          </button>
+          <button onclick="copyVideoId('${videoId}')" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-1 rounded">
+            <i class="fas fa-copy"></i> Copy Link
+          </button>
+        </div>
+      </div>
+    `;
+    playlistContainer.appendChild(videoElement);
+  });
+}
+
+
+// Add this function to your script
+window.copyVideoId = function(videoId) {
+  // Create a temporary input element
+  const tempInput = document.createElement('input');
+  tempInput.value = "https://doods.modsultan.my.id/"+videoId;
+  document.body.appendChild(tempInput);
+
+  // Select the input field
+  tempInput.select();
+  tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+  // Copy the text inside the input field
+  document.execCommand('copy');
+
+  // Remove the temporary input
+  document.body.removeChild(tempInput);
+
+  // Display SweetAlert
+  Swal.fire({
+    title: 'Copied!',
+    text: `Link video berhasil di copy`,
+    icon: 'success',
+    confirmButtonText: 'OK'
+  });
+}
+
+
+
+window.playVideos = function(idVideo, videoTitle) {
+  const videoId = idVideo;
+
+  // Dummy function for incrementing views (without Firebase)
+  console.log('View incremented locally.');
+
+  // Open a new tab with the current URL
+  const url = "https://doods.modsultan.my.id/"+videoId;
+  window.open(url, '_blank');
+
+  // Redirect or perform any other actions after incrementing views
+  const urls = [
+    'https://www.highratecpm.com/uyn55j734?key=6215083a0cad61022fb25eeca740099d',
+    'https://owoampouhy.com/4/7802956',
+    'https://ephraimguntub.com/i4BJdejmNPsUQw/86240',
+    'https://acceptablereality.com/b-3jVZ0UP.3opVvzbqm/VNJAZnDO0/0aOFDvQdzfOrD/Me3YLwTfQX4JNUDgM-4hMIzogP'
+  ];
+
+  // Set a timeout to redirect back after 3 seconds with a random URL
+  setTimeout(() => {
+    const randomIndex = Math.floor(Math.random() * urls.length);
+    window.location.href = urls[randomIndex];
+  }, 3000);
+}
+
+window.download = function(videoUrl, videoTitle) {
+  // Dummy function for incrementing downloads (without Firebase)
+  console.log('Download incremented locally.');
+  window.open(videoUrl, '_blank');
+
+  const urls = [
+    'https://www.highratecpm.com/uyn55j734?key=6215083a0cad61022fb25eeca740099d',
+    'https://owoampouhy.com/4/7802956',
+    'https://ephraimguntub.com/i4BJdejmNPsUQw/86240',
+    'https://acceptablereality.com/b-3jVZ0UP.3opVvzbqm/VNJAZnDO0/0aOFDvQdzfOrD/Me3YLwTfQX4JNUDgM-4hMIzogP'
+  ];
+
+  // Set a timeout to redirect back after 3 seconds with a random URL
+  setTimeout(() => {
+    const randomIndex = Math.floor(Math.random() * urls.length);
+    window.location.href = urls[randomIndex];
+  }, 3000);
+}
+
+
+window.captureThumbnail = function(video) {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  const duration = video.duration;
+  const middleTime = duration / 2;
+  const currentTime = video.currentTime;
+  video.removeAttribute('autoplay');
+  video.currentTime = middleTime;
+  setTimeout(() => {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    video.currentTime = currentTime;
+    video.setAttribute('poster', canvas.toDataURL('image/jpeg'));
+    video.parentElement.querySelector('.loading-overlay').style.display = 'none';
+  }, 500);
+}
+
+
+window.renderPageNumbers = function() {
+const totalPages = Math.ceil(videos.length / videosPerPage);
+    const pageNumbers = document.getElementById('pageNumbers');
+    pageNumbers.innerHTML = ''; // Clear existing page numbers
+
+    const maxVisiblePages = 3; // Set the maximum visible page numbers
+    const displayedPages = [];
+
+    // Calculate the range of pages to display
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (totalPages <= maxVisiblePages) {
+        // If total pages are less than or equal to maxVisiblePages, display all pages
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        // Ensure the current page is centered if not at the beginning or end
+        if (currentPage <= Math.ceil(maxVisiblePages / 2)) {
+            endPage = maxVisiblePages;
+        } else if (currentPage >= totalPages - Math.floor(maxVisiblePages / 2)) {
+            startPage = totalPages - maxVisiblePages + 1;
+        }
+    }
+
+    if (startPage > 1) {
+        const firstPage = document.createElement('button');
+        firstPage.innerText = '1';
+        firstPage.classList.add('mx-1', 'px-3', 'py-1', 'rounded', 'hover:bg-indigo-700', 'hover:text-white');
+        firstPage.addEventListener('click', function () {
+            currentPage = 1;
+            loadVideos(currentPage);
+            renderPageNumbers();
+        });
+        pageNumbers.appendChild(firstPage);
+
+        if (startPage > 2) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            pageNumbers.appendChild(ellipsis);
+        }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        displayedPages.push(i);
+        const button = document.createElement('button');
+        button.innerText = i;
+        button.classList.add('mx-1', 'px-3', 'py-1', 'rounded', 'hover:bg-indigo-700', 'hover:text-white');
+        if (i === currentPage) {
+            button.classList.add('bg-indigo-500', 'text-white');
+        } else {
+            button.classList.add('bg-gray-300', 'text-gray-600');
+        }
+        button.addEventListener('click', function () {
+            currentPage = i;
+            loadVideos(currentPage);
+            renderPageNumbers();
+        });
+        pageNumbers.appendChild(button);
+    }
+
+    if (endPage < totalPages) {
+        if (totalPages - endPage >= 2) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            pageNumbers.appendChild(ellipsis);
+        }
+
+        const lastPage = document.createElement('button');
+        lastPage.innerText = totalPages;
+        lastPage.classList.add('mx-1', 'px-3', 'py-1', 'rounded', 'hover:bg-indigo-700', 'hover:text-white');
+        lastPage.addEventListener('click', function () {
+            currentPage = totalPages;
+            loadVideos(currentPage);
+            renderPageNumbers();
+        });
+        pageNumbers.appendChild(lastPage);
+    }
+}
+
+// Log the device id to the console
+console.log('Device ID:', navigator.userAgent);
+
+  } else {
+        console.error('Invalid or missing API key');
+        // Handle the case where the API key is invalid or missing
+    }
+
+    document.getElementById('searchButton').addEventListener('click', function() {
+        filterVideos();
+    });
+
+window.filterVideos = function() {
+  const searchValue = document.getElementById('searchInput').value.toLowerCase();
+  const videoThumbnails = document.querySelectorAll('.video-thumbnail');
+  let found = false;
+  videoThumbnails.forEach(thumbnail => {
+    const titleElement = thumbnail.querySelector('h2');
+    const title = titleElement.textContent.toLowerCase();
+    if (title.includes(searchValue)) {
+      thumbnail.style.display = 'block';
+      found = true;
+    } else {
+      thumbnail.style.display = 'none';
+    }
+  });
+  document.getElementById('noResults').style.display = found ? 'none' : 'block';
+}
+
+   
+   document.addEventListener('DOMContentLoaded', function() {
+  // Ambil elemen video
+  var videoElement = document.getElementById('video-id');
+
+
+ 
+});
+
+
+
+
+ 
+const currentYear = new Date().getFullYear();
+    document.getElementById('copyrightText').textContent = `© Copyright By Orang Keren ${currentYear}`;
+    document.getElementById('title').textContent = `Orang Keren ${currentYear}`;
+  
+
+</script>
+
+
+
+</body>
+
+</html> 
