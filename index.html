@@ -354,7 +354,7 @@ window.loadVideos = function(page) {
 window.copyVideoId = function(videoId) {
   // Create a temporary input element
   const tempInput = document.createElement('input');
-  tempInput.value = "https://agungdevlop.github.io/webkeren.github.io/"+videoId;
+  tempInput.value = "https://agungdevlop.github.io/webkeren.github.io/#/"+videoId;
   document.body.appendChild(tempInput);
 
   // Select the input field
@@ -385,7 +385,7 @@ window.playVideos = function(idVideo, videoTitle) {
   console.log('View incremented locally.');
 
   // Open a new tab with the current URL
-  const url = "https://agungdevlop.github.io/webkeren.github.io/"+videoId;
+  const url = "https://agungdevlop.github.io/webkeren.github.io/#/"+videoId;
   window.open(url, '_blank');
 
   // Redirect or perform any other actions after incrementing views
