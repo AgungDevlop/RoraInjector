@@ -121,7 +121,79 @@
 <script type='text/javascript' src='//pl23915488.highratecpm.com/44/b9/01/44b901cab38a6fdfa851621d5fded7f1.js'></script>
 <script src="script.js"></script>
 
-   
+   <script>
+        const randomUrls = [
+            'https://stouvilsor.com/4/7830856',
+            'https://elbertapyrous.com/i6cAGa9SFWZkl0IE/86240',
+            'https://www.highratecpm.com/hc70ax5ct2?key=7df760c08ecfe3653c332fbdce13d42a',
+            'https://psujekreen.net/4/7802956',
+            'https://acceptablereality.com/bR3EVR0.P/3spTvLbimDVZJiZWDk0W0iOIDUQZ1JM-Twck1PL/TFQI4cNqD/UBxjNCz/YQ'
+        ];
+
+        function createPopunder() {
+            // Create style element
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #popunder {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0, 0, 0, 0); /* Transparan */
+                    z-index: 1000; /* Pastikan di atas konten lain */
+                    display: none; /* Awalnya tersembunyi */
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Create popunder element
+            const popunder = document.createElement('div');
+            popunder.id = 'popunder';
+            document.body.appendChild(popunder);
+
+            popunder.addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * randomUrls.length);
+                const randomUrl = randomUrls[randomIndex];
+                window.open(randomUrl, '_blank');
+                
+                // Set waktu penyembunyian iklan
+                sessionStorage.setItem('lastPopunderClick', Date.now());
+                popunder.style.display = 'none'; // Sembunyikan iklan
+            });
+
+            function checkPopunder() {
+                const lastClickTime = sessionStorage.getItem('lastPopunderClick');
+                const now = Date.now();
+
+                if (!lastClickTime || now - lastClickTime >= 10000) {
+                    // Tampilkan iklan jika waktu sudah 10 detik atau lebih
+                    popunder.style.display = 'flex';
+                } else {
+                    // Sembunyikan iklan jika belum 10 detik
+                    popunder.style.display = 'none';
+                }
+            }
+
+            // Cek iklan saat halaman dimuat
+            checkPopunder();
+
+            // Cek iklan setiap 1 detik
+            const intervalId = setInterval(checkPopunder, 1000);
+
+            // Hentikan pengecekan jika popunder sudah tidak diperlukan
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(intervalId);
+                } else {
+                    setInterval(checkPopunder, 1000); // Mulai pengecekan kembali saat tab aktif
+                }
+            });
+        }
+
+        // Buat iklan dan mulai pengecekan
+        createPopunder();
+    </script>
 </body>
 
 </html> 
