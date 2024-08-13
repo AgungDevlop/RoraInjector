@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Redirect</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+
+    <!-- FontAwesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <script>
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const paramsToStore = {};
+
+        // Store parameters in session storage excluding 'm=1'
+        urlParams.forEach((value, key) => {
+            if (key !== 'm' || value !== '1') {
+                paramsToStore[key] = value;
+            }
+        });
+
+        // Check if there are parameters to store
+        if (Object.keys(paramsToStore).length > 0) {
+            document.body.innerHTML = '';
+
+            // Store parameters in session storage
+            setSessionStorageParams(paramsToStore);
+
+            // Create a div with Tailwind CSS styling and solid blue background
+            const wrapperDiv = document.createElement('div');
+            wrapperDiv.classList.add('w-full', 'h-screen', 'flex', 'items-center', 'justify-center', 'bg-blue-900'); // Add Tailwind CSS classes for styling
+
+            // Create a button with double chevron icon
+            const downloadButton = document.createElement('button');
+            downloadButton.innerHTML = 'Tonton Video <i class="fas fa-angle-double-right"></i>';
+            downloadButton.classList.add('bg-blue-800', 'text-white', 'border-none', 'px-6', 'py-3', 'text-center', 'text-lg', 'font-bold', 'rounded-full', 'shadow-lg'); // Increase padding and font size
+
+            // Add event listener to redirect to the provided URL when the button is clicked
+            downloadButton.addEventListener('click', function () {
+                const targetUrl = 'https://doobs.my.id/play.html';
+                const randomPostTab = window.open(targetUrl, '_blank');
+
+                // After 3 seconds, open a YouTube link in the same tab
+                setTimeout(function () {
+                    window.location.href = 'https://majorcharacter.com/bE3QV/0.Pr3oprv/bYmhVeJvZfDO0J0POzD/QNzxO_DpM-3/LFT/Qh4TNoDxM_4lMSzMgT'; // Replace with your YouTube link
+                }, 3000);
+            });
+
+            // Append the button to the wrapper div
+            wrapperDiv.appendChild(downloadButton);
+
+            // Append the wrapper div to the body
+            document.body.appendChild(wrapperDiv);
+        }
+
+        function setSessionStorageParams(params) {
+            for (const [key, value] of Object.entries(params)) {
+                sessionStorage.setItem(key, value);
+            }
+        }
+  </script>
+</body>
+</html>
