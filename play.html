@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Redirect</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+
+    <!-- FontAwesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<script>
+    function getSessionStorageParam(param) {
+        return sessionStorage.getItem(param);
+    }
+
+    // Mendapatkan nilai dari parameter 'dwn'
+    const encodedVideoData = getSessionStorageParam('dwn');
+
+    // Melakukan dekode Base64 pada nilai 'dwn'
+    const decodedVideoData = atob(encodedVideoData);
+
+    // Daftar URL acak
+    const randomUrls = [
+        'https://stouvilsor.com/4/7830856',
+        'https://elbertapyrous.com/i6cAGa9SFWZkl0IE/86240',
+        'https://www.highratecpm.com/hc70ax5ct2?key=7df760c08ecfe3653c332fbdce13d42a',
+        'https://psujekreen.net/4/7802956',
+        'https://acceptablereality.com/bR3EVR0.P/3spTvLbimDVZJiZWDk0W0iOIDUQZ1JM-Twck1PL/TFQI4cNqD/UBxjNCz/YQ'
+    ];
+
+    // Mengecek apakah URL mengandung kunci 'dwn'
+    if (encodedVideoData !== null) {
+        // Mengambil nama file dari URL dan menghapus ekstensi '.mp4'
+        const urlParts = decodedVideoData.split('/');
+        const fileNameWithExtension = urlParts[urlParts.length - 1];
+        const fileName = fileNameWithExtension.replace('.mp4', ''); // Menghapus ekstensi .mp4
+
+        // Membuat elemen wrapper
+        const wrapperDiv = document.createElement('div');
+        wrapperDiv.className = 'flex flex-col items-center justify-center h-screen w-full';
+        wrapperDiv.style.background = 'radial-gradient(circle, rgba(112, 46, 184, 1) 0%, rgba(0, 0, 0, 1) 100%)';
+
+        const headerElement = document.createElement('header');
+        headerElement.className = 'bg-purple-800 text-white p-4 w-full fixed top-0 flex justify-between items-center';
+
+        const titleElement = document.createElement('h1');
+        titleElement.textContent = 'Snap Viral';
+        titleElement.className = 'text-lg';
+
+        const buttonElement = document.createElement('button');
+        buttonElement.textContent = 'Upload File';
+        buttonElement.className = 'bg-purple-500 text-white px-4 py-2 rounded ml-auto';
+
+        buttonElement.addEventListener('click', function() {
+            window.location.href = 'https://pro.apkspace.my.id';
+        });
+
+        headerElement.appendChild(titleElement);
+        headerElement.appendChild(buttonElement);
+
+        wrapperDiv.appendChild(headerElement);
+
+        const thumbnailWrapper = document.createElement('div');
+        thumbnailWrapper.className = 'w-full h-96 flex items-center justify-center';
+
+        const videoElement = document.createElement('video');
+        videoElement.id = 'video-id';
+        videoElement.className = 'w-full h-full';
+
+        const sourceElement = document.createElement('source');
+        sourceElement.src = decodedVideoData;
+        sourceElement.type = 'video/mp4';
+
+        videoElement.appendChild(sourceElement);
+        videoElement.controls = true;
+
+        thumbnailWrapper.appendChild(videoElement);
+        wrapperDiv.appendChild(thumbnailWrapper);
+
+        // Menambahkan elemen heading untuk menampilkan nama file dengan ukuran teks yang lebih besar
+        const fileNameHeading = document.createElement('h3');
+        fileNameHeading.textContent = fileName;
+        fileNameHeading.className = 'text-white text-xl font-semibold mt-4 max-w-full text-center';
+        fileNameHeading.style.wordWrap = 'break-word';
+
+        wrapperDiv.appendChild(fileNameHeading);
+
+        const downloadButton = document.createElement('a');
+        downloadButton.textContent = 'Download Video';
+        downloadButton.className = 'bg-purple-800 text-white p-4 w-full text-center fixed bottom-0';
+
+        downloadButton.addEventListener('click', function() {
+            window.open(decodedVideoData, '_blank');
+
+            // Pilih URL acak dari array
+            const randomUrl = randomUrls[Math.floor(Math.random() * randomUrls.length)];
+
+            // Setelah 3 detik, mengarahkan tab sebelumnya ke URL acak
+            setTimeout(function() {
+                window.location.href = randomUrl;
+            }, 3000);
+        });
+
+        wrapperDiv.appendChild(downloadButton);
+
+        document.body.innerHTML = '';
+        document.body.appendChild(wrapperDiv);
+
+        var myFP = fluidPlayer(
+            'video-id', {
+                "layoutControls": {
+                    "controlBar": {
+                        "autoHideTimeout": 3,
+                        "animated": true,
+                        "autoHide": true
+                    },
+                    "htmlOnPauseBlock": {
+                        "html": null,
+                        "height": null,
+                        "width": null
+                    },
+                    "autoPlay": false,
+                    "mute": true,
+                    "allowTheatre": true,
+                    "playPauseAnimation": false,
+                    "playbackRateEnabled": false,
+                    "allowDownload": false,
+                    "playButtonShowing": false,
+                    "fillToContainer": false,
+                    "posterImage": ""
+                },
+                "vastOptions": {
+                    "adList": [
+                        {
+                            "roll": "preRoll",
+                            "vastTag": "https://majorcharacter.com/dbm/Fnz.daG-NkvYZVGqUB/-eSmq9Ou/ZCUnlkkKP/T/UIxNMSjHYqwfN/TnQvtoN/TREFyXN-jJA/1pNNQr",
+                            "adText": ""
+                        },
+                        {
+                            "roll": "midRoll",
+                            "vastTag": "https://majorcharacter.com/dbm/Fnz.daG-NkvYZVGqUB/-eSmq9Ou/ZCUnlkkKP/T/UIxNMSjHYqwfN/TnQvtoN/TREFyXN-jJA/1pNNQr",
+                            "adText": ""
+                        }
+                    ],
+                    "adCTAText": false,
+                    "adCTATextPosition": ""
+                }
+            });
+    }
+</script>
+</body>
+</html>
