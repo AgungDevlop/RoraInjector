@@ -137,19 +137,18 @@
         <button id="downloadButton" class="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition w-full text-center">Download Video</button>
     </div>
 
-    <!-- Search Input -->
-    <div class="flex items-center mt-4">
-        <i class="fas fa-search text-white mr-2"></i>
-        <input id="searchInput" type="text" placeholder="Search videos..." class="border rounded w-full py-2 px-3 bg-gray-800 text-white" />
+<div class="container mx-auto mt-5">
+    <div class="flex items-center mb-4">
+        <input type="text" id="searchInput" placeholder="Search videos..." class="border rounded p-2 w-full" />
+        <button id="searchButton" class="bg-blue-500 text-white rounded p-2 ml-2">
+            <i class="fas fa-search"></i>
+        </button>
     </div>
+    <div id="video-list" class="hidden">
+        <div id="video-items" class="space-y-4"></div>
+    </div>
+</div>
 
-    <!-- Video List (will appear if random ID is present) -->
-    <div id="video-list" class="mt-8 hidden">
-        <h2 class="text-3xl font-bold mb-4">Video Lainya</h2>
-        <div id="video-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Video items will be dynamically added here -->
-        </div>
-    </div>
 </main>
     
     
