@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaCopy, FaVideo, FaPlay, FaSearch } from 'react-icons/fa';
 
