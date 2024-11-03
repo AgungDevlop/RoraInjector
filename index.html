@@ -1,187 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Video</title>
-
-    <!-- Include Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <!-- Plyr CSS -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
-
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RXK2H73QCS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-RXK2H73QCS');
-</script>
-    <!-- SweetAlert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body,
-        h1,
-        h2 {
-            font-family: 'Montserrat', sans-serif;
+    <script type="text/javascript">
+      (function (l) {
+        // Redirect logic for /#:id to /:id
+        if (l.hash && l.hash.startsWith('#/')) {
+          const newPath = l.hash.replace('#', '');
+          window.location.replace(newPath); // Redirect to /:id
         }
 
-        .bg-black {
-            background-color: #000000;
+        // Existing logic for handling search parameters
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
         }
-
-        .text-white {
-            color: #ffffff;
-        }
-
-        .btn-share {
-            background-color: #4f46e5;
-            color: white;
-        }
-
-        .btn-share:hover {
-            background-color: #4338ca;
-        }
-
-        .pagination {
-            margin-top: 20px;
-        }
-
-        .pagination button {
-            margin-right: 10px;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 24px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .centered-download {
-            display: flex;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-
-        #video-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
-</head>
-
-<body class="bg-black text-white p-2 mb-10">
-
-<script async type="text/javascript" src="https://s0-greate.net/p/1237187"></script>    
-<script async data-cfasync="false">
-  (function() {
-      const url = new URL(window.location.href);
-      const clickID = url.searchParams.get("click_id");
-      const sourceID = url.searchParams.get("source_id");
-
-      const s = document.createElement("script");
-      s.dataset.cfasync = "false";
-      s.src = "https://push-sdk.com/f/sdk.js?z=1259482";
-      s.onload = (opts) => {
-          opts.zoneID = 1259482;
-          opts.extClickID = clickID;
-          opts.subID1 = sourceID;
-          opts.actions.onPermissionGranted = () => {};
-          opts.actions.onPermissionDenied = () => {};
-          opts.actions.onAlreadySubscribed = () => {};
-          opts.actions.onError = () => {};
-      };
-      document.head.appendChild(s);
-  })()
-</script>    
-
-<header class="w-full bg-gray-800 text-center p-4">
-    <h1 id="title" class="text-4xl font-bold mb-6">Simontok 2024</h1>
-</header>
-
-<!-- Banner Ads -->
-    <div class="max-w-xl mx-auto mt-6 relative">
-        <!-- Label Iklan -->
-        <div class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold py-0.5 px-2 rounded-bl-lg">
-            Iklan
-        </div>
-        <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden flex items-center p-2">
-            <!-- Gambar Aplikasi -->
-            <div class="flex-shrink-0">
-                <img src="https://i.ibb.co.com/hyN0btK/icon.jpg" alt="App Logo" class="rounded-full w-12 h-12">
-            </div>
-            <!-- Teks Promosi -->
-            <div class="flex-grow ml-3">
-                <h2 class="text-base font-semibold text-white">Try AY TOOLS INJECTOR!</h2>
-                <p class="mt-0.5 text-xs text-gray-400">Rasakan Skin Visual Mobile Legends Gratis Work Semua Android!</p>
-            </div>
-            <!-- Tombol Install Now -->
-            <div class="flex-shrink-0 ml-3">
-                <a href="https://play.google.com/store/apps/details?id=com.agung.ayinjector" target="_blank" class="inline-block bg-green-500 text-white py-1 px-2 rounded-full text-xs hover:bg-green-600">
-                    Install Now
-                </a>
-            </div>
-        </div>
-    </div>    
-    
-<!-- Main Content -->
-<main id="mainContent" class="container mx-auto mt-8 p-2 bg-gray-900 rounded shadow-lg hidden">
-    <div id="video-container" class="aspect-w-16 aspect-h-9 w-full">
-        <h1 id="videoTitle" class="text-2xl mt-8 font-bold">Video Title</h1>
-        <div id="plyr-container">
-            <video id="video-id" class="w-full h-full" controls preload="metadata" allowfullscreen>
-                <source id="playVideo" type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        <div id="errorMessage" class="error-message hidden">Error loading video</div>
-    </div>
-
-    <!-- Input URL and Share Button -->
-    <div class="flex items-center mt-4">
-        <input id="videoUrl" type="text" class="border rounded w-full py-2 px-3 bg-gray-800 text-white" value="https://doobs.my.id/#/randomId" readonly />
-        <button id="shareButton" class="ml-2 btn-share rounded px-4 py-2 hover:bg-indigo-600 transition">
-            <i class="fas fa-share-alt"></i>
-        </button>
-    </div>
-
-    <!-- Centered Download Button -->
-    <div class="centered-download">
-        <button id="downloadButton" class="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition w-full text-center">Download Video</button>
-    </div>
-
-<div class="container mx-auto mt-5">
-    <div class="flex items-center mb-4">
-        <input style="color: black;" type="text" id="searchInput" placeholder="Search videos..." class="border rounded p-2 w-full" />
-        <button id="searchButton" class="bg-blue-500 text-white rounded p-2 ml-2">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-    <div id="video-list" class="hidden">
-        <div id="video-items" class="space-y-4"></div>
-    </div>
-</div>
-
-</main>
-    
-<footer class="bg-gray-800 mt-3 text-white p-4 text-center fixed bottom-0 left-0 w-full">
-    <p id="copyrightText" class="text-sm">
-        ©Copyright By Simontok Indo 2024
-    </p>
-</footer>
-
-<!-- Plyr JS -->
-<script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script>
-
-    <script src="script.js"></script>
-
-</body>
+      })(window.location);
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
