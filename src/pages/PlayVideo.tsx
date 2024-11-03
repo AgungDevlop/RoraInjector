@@ -81,6 +81,10 @@ export function PlayVideo() {
     }
   };
 
+  const handlePlayClick = (title: string) => {
+    document.title = title; // Update the document title to the video title
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -157,6 +161,7 @@ export function PlayVideo() {
             <Link
               to={`/${video.id}`}
               className="bg-blue-500 text-white text-xs p-2 rounded flex items-center"
+              onClick={() => handlePlayClick(video.Judul)} // Change title on click
             >
               <FaPlay className="mr-1" />
               Play
@@ -229,4 +234,3 @@ export function PlayVideo() {
     </div>
   );
 }
-
