@@ -20,7 +20,7 @@ export function PlayVideo() {
     "https://xvx.doobs.my.id/",
     "https://snap.doobs.my.id/",
     "https://doobs.my.id/",
-    "https://play.doob.my.id/"
+    "https://play.doobs.my.id/"
   ];
 
   // Array of URLs for pop-under links
