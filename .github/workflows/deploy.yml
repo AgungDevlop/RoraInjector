@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3  # Update ke versi v3
+        uses: actions/checkout@v4  # Update ke versi v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3  # Update ke versi v3
+        uses: actions/setup-node@v4  # Update ke versi v4
         with:
           node-version: 16
 
@@ -26,8 +26,7 @@ jobs:
         run: npm run build
 
       - name: Upload production-ready build files
-        uses: actions/upload-artifact@v4  # Update ke versi v4 (versi terbaru)
-
+        uses: actions/upload-artifact@v4  # Update ke versi v4
         with:
           name: production-files
           path: ./dist
@@ -40,10 +39,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3  # Pastikan repositori dicheckout di job deploy juga
+        uses: actions/checkout@v4  # Pastikan repositori dicheckout di job deploy juga
 
       - name: Download artifact
-        uses: actions/download-artifact@v4  # Update ke versi v4 (versi terbaru)
+        uses: actions/download-artifact@v4  # Update ke versi v4
         with:
           name: production-files
           path: ./dist
