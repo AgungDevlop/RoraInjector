@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { FaCopy, FaVideo, FaPlay, FaSearch } from 'react-icons/fa';
+import { FaCopy, FaVideo, FaPlay, FaSearch, FaDownload } from 'react-icons/fa';
 
 export function PlayVideo() {
   const { id } = useParams<{ id: string }>();
@@ -17,10 +17,7 @@ export function PlayVideo() {
 
   // Array of URLs with video ID from the list
   const videoBaseUrls = [
-    "https://xvx.doobs.my.id/",
-    "https://snap.doobs.my.id/",
-    "https://doobs.my.id/",
-    "https://play.doobs.my.id/"
+    "https://doobs.top/e/"
   ];
 
   // Array of URLs for pop-under links
@@ -43,6 +40,7 @@ export function PlayVideo() {
         // Find the current video by id
         const video = shuffledData.find((item: { id: string }) => item.id === id);
         if (video) {
+          document.title = video.Judul;
           setVideoUrl(video.Url);
           setVideoTitle(video.Judul);
           sessionStorage.setItem('videoUrl', video.Url);
@@ -127,133 +125,141 @@ export function PlayVideo() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-xl font-bold mb-4 text-center break-words">{videoTitle}</h1>
+  <div className="container mx-auto max-w-2xl p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+    {/* Video Title */}
+    <h1 className="text-2xl font-bold mb-4 text-center break-words">{videoTitle}</h1>
 
-      <div className="mb-4" style={{ width: '100%', height: 'auto', position: 'relative', aspectRatio: '16/9' }}>
-        <video
-          className="absolute top-0 left-0 w-full h-full object-contain"
-          controls
-          src={videoUrl}
-          preload="metadata"
-        />
-      </div>
+    {/* Video Player dengan Ukuran Tetap (Landscape) */}
+    <div className="mb-4 w-full h-[360px] rounded-lg overflow-hidden shadow-lg border border-gray-700 bg-black flex items-center justify-center">
+      <video
+        className="w-full h-full object-contain"
+        controls
+        src={videoUrl}
+        preload="metadata"
+      />
+    </div>
 
-      <div className="flex mb-4">
-        <input
-          type="text"
-          value={`https://${window.location.hostname}/${id}`}
-          readOnly
-          className="flex-1 p-2 bg-gray-800 text-white border border-gray-300 rounded-l"
-        />
-        <button
-          onClick={handleCopy}
-          className="bg-gray-700 text-white p-2 rounded-r"
-        >
-          <FaCopy />
-        </button>
+    {/* Copy Video URL */}
+    <div className="flex mb-4 border border-gray-700 rounded-lg overflow-hidden">
+      <input
+        type="text"
+        value={`https://${window.location.hostname}/${id}`}
+        readOnly
+        className="flex-1 p-3 bg-gray-800 text-white outline-none"
+      />
+      <button
+        onClick={handleCopy}
+        className="bg-blue-500 hover:bg-blue-600 transition-colors text-white p-3"
+      >
+        <FaCopy />
+      </button>
+    </div>
+
+    {/* Download Button */}
+    <button
+      onClick={handleDownloadClick}
+      className="w-full bg-green-500 hover:bg-green-600 transition-colors text-white py-3 rounded-lg flex items-center justify-center font-semibold mb-4 shadow-md"
+    >
+      <FaDownload className="mr-2" />
+      Download
+    </button>
+
+    {/* Search Bar */}
+    <div className="flex mb-4 border border-gray-700 rounded-lg overflow-hidden">
+      <input
+        type="text"
+        placeholder="Search videos..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="flex-1 p-3 bg-gray-800 text-white outline-none"
+      />
+      <button
+        onClick={() => handlePageChange(1)}
+        className="bg-blue-500 hover:bg-blue-600 transition-colors text-white p-3"
+      >
+        <FaSearch />
+      </button>
+    </div>
+
+    {/* Video List */}
+    <div className="grid grid-cols-1 gap-4">
+      {currentVideos.map((video) => (
+        <div key={video.id} className="flex items-center border border-gray-700 p-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors shadow-md">
+          <FaVideo className="text-green-500 text-3xl mr-3" />
+          <h2 className="text-white font-medium text-sm flex-1 break-words">{video.Judul}</h2>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 transition-colors text-white text-xs px-3 py-2 rounded flex items-center shadow-md"
+            onClick={() => handlePlayClick(video.id)}
+          >
+            <FaPlay className="mr-1" />
+            Play
+          </button>
+        </div>
+      ))}
+    </div>
+
+    {/* Pagination */}
+    <div className="flex items-center justify-between mt-6">
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="bg-gray-700 hover:bg-gray-600 transition-colors text-white py-2 px-4 rounded disabled:opacity-50"
+      >
+        Prev
+      </button>
+
+      <div className="flex items-center">
+        {currentPage > 3 && (
+          <>
+            <button
+              onClick={() => handlePageChange(1)}
+              className="mx-1 p-2 rounded bg-gray-700 hover:bg-gray-600 transition-colors text-white"
+            >
+              1
+            </button>
+            <span className="mx-1 text-gray-400">...</span>
+          </>
+        )}
+
+        {Array.from({ length: Math.min(totalPages, 3) }, (_, index) => {
+          const pageNumber = index + Math.max(currentPage - 1, 1);
+          if (pageNumber <= totalPages) {
+            return (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`mx-1 p-2 rounded ${currentPage === pageNumber ? 'bg-blue-500' : 'bg-gray-700'} hover:bg-blue-600 transition-colors text-white`}
+              >
+                {pageNumber}
+              </button>
+            );
+          }
+          return null;
+        })}
+
+        {currentPage < totalPages - 2 && (
+          <>
+            <span className="mx-1 text-gray-400">...</span>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="mx-1 p-2 rounded bg-gray-700 hover:bg-gray-600 transition-colors text-white"
+            >
+              {totalPages}
+            </button>
+          </>
+        )}
       </div>
 
       <button
-        onClick={handleDownloadClick}
-        className="bg-orange-500 text-white p-2 rounded w-full flex items-center justify-center mb-4"
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="bg-gray-700 hover:bg-gray-600 transition-colors text-white py-2 px-4 rounded disabled:opacity-50"
       >
-        Download
+        Next
       </button>
-
-      <div className="flex mb-4">
-        <input
-          type="text"
-          placeholder="Search videos..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 p-2 bg-gray-800 text-white border border-gray-300 rounded-l"
-        />
-        <button
-          onClick={() => handlePageChange(1)}
-          className="bg-gray-700 text-white p-2 rounded-r flex items-center"
-        >
-          <FaSearch />
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4">
-        {currentVideos.map((video) => (
-          <div key={video.id} className="flex items-center border border-white p-3 rounded-lg bg-gray-800">
-            <FaVideo className="text-orange-500 text-3xl mr-3" style={{ minWidth: '2rem' }} />
-            <h2 className="text-white font-medium text-sm flex-1 text-left break-words">
-              {video.Judul}
-            </h2>
-            <button
-              className="bg-blue-500 text-white text-xs p-2 rounded flex items-center"
-              onClick={() => handlePlayClick(video.id)}
-            >
-              <FaPlay className="mr-1" />
-              Play
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <div className="flex items-center justify-between mt-4">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="bg-gray-700 text-white p-2 rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-        
-        <div className="flex items-center">
-          {currentPage > 3 && (
-            <>
-              <button
-                onClick={() => handlePageChange(1)}
-                className="mx-1 p-2 rounded bg-gray-700 text-white"
-              >
-                1
-              </button>
-              <span className="mx-1 text-white">...</span>
-            </>
-          )}
-          
-          {Array.from({ length: Math.min(totalPages, 3) }, (_, index) => {
-            const pageNumber = index + Math.max(currentPage - 1, 1);
-            if (pageNumber <= totalPages) {
-              return (
-                <button
-                  key={pageNumber}
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`mx-1 p-2 rounded ${currentPage === pageNumber ? 'bg-blue-500' : 'bg-gray-700'} text-white`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            }
-            return null;
-          })}
-          
-          {currentPage < totalPages - 2 && (
-            <>
-              <span className="mx-1 text-white">...</span>
-              <button
-                onClick={() => handlePageChange(totalPages)}
-                className="mx-1 p-2 rounded bg-gray-700 text-white"
-              >
-                {totalPages}
-              </button>
-            </>
-          )}
-        </div>
-
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="bg-gray-700 text-white p-2 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
     </div>
-  );
+  </div>
+);
+
+
 }

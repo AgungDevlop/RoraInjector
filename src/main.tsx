@@ -7,6 +7,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Contact } from "./pages/Contact.tsx";
 import { PlayVideo } from "./pages/PlayVideo.tsx";
 import { Download } from "./pages/Download.tsx"; // Impor halaman Download
+import Redirect from "./pages/Redirect.tsx"; // Impor komponen Redirect
 
 const router = createBrowserRouter([
   {
@@ -18,12 +19,20 @@ const router = createBrowserRouter([
         element: <PlayVideo />,
       },
       {
+        path: "e/:id", // Rute baru untuk format `/e/:id`
+        element: <PlayVideo />,
+      },
+      {
         path: "download", // Rute untuk halaman Download
         element: <Download />,
       },
       {
         path: "contact", // Rute untuk halaman Contact
         element: <Contact />,
+      },
+      {
+        path: "s/:id",
+        element: <Redirect />,
       },
     ],
   },
