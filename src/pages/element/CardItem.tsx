@@ -3,7 +3,7 @@ interface CardItemProps {
   icon: React.ReactNode;
   title: string;
   value: string | number;
-  description?: string;
+  description?: React.ReactNode;
   onClick?: () => void;
   bgColor?: string; // New prop for background color
 }
