@@ -1,0 +1,62 @@
+{
+  "/": {
+    "title": "VideoID Host - Beranda",
+    "description": "Platform hosting video terbaik di Indonesia.",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe72Sc09GA1DoTccYvB0gUtUAXgGHCTOy37Q&usqp=CAU",
+    "url": "https://doobs.my.id"
+  },
+  "/login": {
+    "title": "VideoID Host - Login",
+    "description": "Masuk ke akun Anda untuk mengelola video.",
+    "image": "https://cdn-icons-png.freepik.com/512/4661/4661334.png",
+    "url": "https://doobs.my.id"
+  },
+  "/register": {
+    "title": "VideoID Host - Daftar",
+    "description": "Buat akun baru untuk mulai mengunggah video.",
+    "image": "https://cdn-icons-png.freepik.com/512/4661/4661334.png",
+    "url": "https://doobs.my.id"
+  },
+  "/dashboard": {
+    "title": "VideoID Host - Dashboard",
+    "description": "Kelola video dan peroleh data analitik.",
+    "image": "URL_TO_DASHBOARD_IMAGE",
+    "url": "YOUR_DASHBOARD_URL"
+  },
+  "/upload": {
+    "title": "VideoID Host - Unggah Video",
+    "description": "Unggah video baru dan mulai menghasilkan.",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe72Sc09GA1DoTccYvB0gUtUAXgGHCTOy37Q&usqp=CAU",
+    "url": "https://doobs.my.id"
+  },
+  "/payment": {
+    "title": "VideoID Host - Pembayaran",
+    "description": "Kelola pembayaran dan tarik dana Anda.",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt5xbdWp4nLEgjj3CNaQgajBpG4d5qQ1QNRA&usqp=CAU",
+    "url": "https://doobs.my.id"
+  },
+  "/profile": {
+    "title": "VideoID Host - Profil",
+    "description": "Perbarui informasi profil Anda.",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEElYI_PQTngP_MFo5MPdDaozr7VLmYO79xw&usqp=CAU",
+    "url": "https://doobs.my.id"
+  },
+  "/payment-method": {
+    "title": "VideoID Host - Metode Pembayaran",
+    "description": "Atur metode pembayaran untuk kenyamanan Anda.",
+    "image": "https://www.bayarind.id/wp-content/themes/bayarind/assets/img/img-tab-integration-pg3.webp",
+    "url": "https://doobs.my.id"
+  },
+  "/contact": {
+    "title": "VideoID Host - Kontak Kami",
+    "description": "Hubungi kami untuk bantuan atau pertanyaan.",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRks1myZa91rLalaDPQENiNRY7JR3aP8TEdQ&usqp=CAU",
+    "url": "https://doobs.my.id"
+  },
+  "/download": {
+    "title": "VideoID Host - Unduh",
+    "description": "Unduh video yang Anda butuhkan.",
+    "image": "https://cdn-icons-png.flaticon.com/512/9205/9205302.png",
+    "url": "https://doobs.my.id"
+  }
+}
