@@ -1,3 +1,6 @@
+import { FaUser, FaCreditCard, FaBuilding } from 'react-icons/fa';
+import { FormEvent } from 'react';
+
 interface PaymentFormProps {
   selectedMethod: string | null;
   receiverName: string;
@@ -6,11 +9,8 @@ interface PaymentFormProps {
   setReceiverName: (value: string) => void;
   setAccountNumber: (value: string) => void;
   setBankName: (value: string) => void;
-  handleSave: (e: React.FormEvent<HTMLFormElement>) => void;
-  editMode: boolean;
+  handleSave: (e: FormEvent<HTMLFormElement>) => void;
 }
-
-import { FaUser, FaCreditCard, FaBuilding } from 'react-icons/fa';
 
 const PaymentForm: React.FC<PaymentFormProps> = ({
   selectedMethod,
@@ -21,7 +21,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   setAccountNumber,
   setBankName,
   handleSave,
-  editMode,
 }) => (
   <form onSubmit={handleSave} className="space-y-4 mt-4">
     {selectedMethod?.toLowerCase() === "bank" && (
@@ -80,7 +79,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       type="submit"
       className="w-full bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition duration-300"
     >
-      {editMode ? "Update" : "Simpan"}
+      Simpan
     </button>
   </form>
 );

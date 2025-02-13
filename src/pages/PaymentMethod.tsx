@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaUniversity, FaCheckCircle, FaQuestionCircle } from 'react-icons/fa';
 import PaymentCard from "./material/PaymentCard";
 import PaymentForm from "./material/PaymentForm";

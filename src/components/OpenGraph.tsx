@@ -25,7 +25,7 @@ const OpenGraph: React.FC = () => {
 
   return (
     <Helmet>
-      <title>{ogData.title}</title>  {/* Set the title from JSON data */}
+      <title>{ogData.title}</title>  
       <meta property="og:title" content={ogData.title} />
       <meta property="og:description" content={ogData.description} />
       <meta property="og:image" content={ogData.image} />

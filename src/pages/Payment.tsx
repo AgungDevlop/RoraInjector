@@ -162,15 +162,6 @@ const Payment = () => {
     return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
-  const getStatusColor = (status: string) => {
-    switch(status) {
-      case 'pending': return 'yellow';
-      case 'approved': return 'green';
-      case 'rejected': return 'red';
-      default: return 'gray';
-    }
-  };
-
   const calculateEstimatedProcessing = (requestedAt: string): string => {
     const date = new Date(requestedAt);
     date.setDate(date.getDate() + 7); // Add 7 days to the requested date
@@ -231,15 +222,15 @@ const Payment = () => {
         Pembayaran
       </h1>
 
-{/* Success Message */}
-{showSuccessMessage && (
-  <div 
-    className="mb-4 p-4 bg-purple-800 border border-purple-600 text-white rounded transition-opacity duration-500"
-    style={{ opacity: showSuccessMessage ? 1 : 0 }}
-  >
-    <p>Payment Method Berhasil Di Tambahkan</p>
-  </div>
-)}
+      {/* Success Message */}
+      {showSuccessMessage && (
+        <div 
+          className="mb-4 p-4 bg-purple-800 border border-purple-600 text-white rounded transition-opacity duration-500"
+          style={{ opacity: showSuccessMessage ? 1 : 0 }}
+        >
+          <p>Payment Method Berhasil Di Tambahkan</p>
+        </div>
+      )}
 
       {/* Card Payment */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-20">
@@ -273,86 +264,86 @@ const Payment = () => {
 
       {requestError && <p className="text-red-500 text-center">{requestError}</p>}
       {error && <p className="text-red-500 text-center">{error}</p>}
-{/* Modal for Withdrawal Confirmation */}
-{isModalOpen && (
-  <div className="fixed z-50 inset-0 overflow-y-auto">
-    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-      <div className="fixed inset-0 transition-opacity">
-        <div className="absolute inset-0 bg-purple-900 opacity-75"></div> {/* Very dark overlay */}
-      </div>
-      <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
-      <div className="inline-block align-middle bg-purple-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-        <div className="bg-purple-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div className="sm:flex sm:items-start">
-            <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-purple-700 sm:mx-0 sm:h-10 sm:w-10"> {/* Subtle contrast for icon */}
-              <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+
+      {/* Modal for Withdrawal Confirmation */}
+      {isModalOpen && (
+        <div className="fixed z-50 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity">
+              <div className="absolute inset-0 bg-purple-900 opacity-75"></div>
             </div>
-            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-              <h3 className="text-lg leading-6 font-medium text-white">
-                Apakah Kamu yakin Akan Melakukan Withdraw?
-              </h3>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
+            <div className="inline-block align-middle bg-purple-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-purple-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-purple-700 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 className="text-lg leading-6 font-medium text-white">
+                      Apakah Kamu yakin Akan Melakukan Withdraw?
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-purple-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button onClick={confirmWithdrawal} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm">
+                  Ya, Withdraw
+                </button>
+                <button onClick={cancelWithdrawal} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-purple-600 shadow-sm px-4 py-2 bg-purple-700 text-base font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                  Batal
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="bg-purple-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button onClick={confirmWithdrawal} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm">
-            Ya, Withdraw
-          </button>
-          <button onClick={cancelWithdrawal} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-purple-600 shadow-sm px-4 py-2 bg-purple-700 text-base font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-            Batal
-          </button>
-        </div>
+      )}
+
+      {/* Display Payment Requests */}
+      <div className="mt-4 bg-purple-900 rounded-lg shadow-lg overflow-x-auto">
+        <h2 className="text-xl font-bold mb-2 p-4 text-white">Payment Requests:</h2>
+        {loading ? (
+          <p className="text-white text-center p-4">Loading requests...</p>
+        ) : (
+          <table className="w-full divide-y divide-purple-800">
+            <thead className="bg-purple-800">
+              <tr>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Payment Method</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Amount</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Estimasi</th>
+              </tr>
+            </thead>
+            <tbody className="bg-purple-900 divide-y divide-purple-800">
+              {/* Sort the payment requests so 'pending' requests appear first */}
+              {[...paymentRequests].sort((a, b) => {
+                if (a.status === 'pending' && b.status !== 'pending') return -1;
+                if (b.status === 'pending' && a.status !== 'pending') return 1;
+                return 0;
+              }).map(request => (
+                <tr key={request.request_id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{formatDate(request.requested_at)}</td>
+                  <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${request.status === 'pending' ? 'bg-yellow-600' : request.status === 'approved' ? 'bg-green-600' : request.status === 'rejected' ? 'bg-red-600' : 'bg-purple-700'}`}>
+                    {request.status}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{request.payment_method || 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{formatCurrency(request.request_amount)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                    {request.status === 'pending' ? calculateEstimatedProcessing(request.requested_at) : 'N/A'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
+
+      {/* Spacer to prevent footer overlap */}
+      <div className="h-20"></div>
     </div>
-  </div>
-)}
-
-
-{/* Display Payment Requests */}
-<div className="mt-4 bg-purple-900 rounded-lg shadow-lg overflow-x-auto">
-  <h2 className="text-xl font-bold mb-2 p-4 text-white">Payment Requests:</h2>
-  {loading ? (
-    <p className="text-white text-center p-4">Loading requests...</p>
-  ) : (
-    <table className="w-full divide-y divide-purple-800">
-      <thead className="bg-purple-800">
-        <tr>
-          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
-          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
-          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Payment Method</th>
-          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Amount</th>
-          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Estimasi</th>
-        </tr>
-      </thead>
-      <tbody className="bg-purple-900 divide-y divide-purple-800">
-        {/* Sort the payment requests so 'pending' requests appear first */}
-        {[...paymentRequests].sort((a, b) => {
-          if (a.status === 'pending' && b.status !== 'pending') return -1;
-          if (b.status === 'pending' && a.status !== 'pending') return 1;
-          return 0;
-        }).map(request => (
-          <tr key={request.request_id}>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{formatDate(request.requested_at)}</td>
-            <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${request.status === 'pending' ? 'bg-yellow-600' : request.status === 'approved' ? 'bg-green-600' : request.status === 'rejected' ? 'bg-red-600' : 'bg-purple-700'}`}>
-              {request.status}
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{request.payment_method || 'N/A'}</td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{formatCurrency(request.request_amount)}</td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-              {request.status === 'pending' ? calculateEstimatedProcessing(request.requested_at) : 'N/A'}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</div>
-
-{/* Spacer to prevent footer overlap */}
-<div className="h-20"></div>
-</div>
   );
 };
 

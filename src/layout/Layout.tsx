@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { FaHome, FaArrowLeft, FaArrowRight, FaChartLine, FaPiggyBank, FaUserCircle, FaChevronDown, FaChevronUp, FaUpload } from 'react-icons/fa';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import OpenGraph from '../components/OpenGraph'; // Assuming you've created this file in the same directory
+import OpenGraph from '../components/OpenGraph';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(null); // Here we will use user data
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -55,16 +55,16 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <OpenGraph />  {/* Here's where we add the OpenGraph component */}
+      <OpenGraph />
       
       {/* Header */}
       <header className="fixed top-0 left-0 w-full p-4 text-white flex items-center justify-between z-50" 
               style={{ background: 'radial-gradient(circle at top right, #4b0082, #1c002c)' }}>
         <div className="flex items-center">
-          <FaUpload className="mr-2 text-xl" /> {/* Upload icon */}
+          <FaUpload className="mr-2 text-xl" />
           <h1 className="text-2xl font-bold">VideoID Host</h1>
         </div>
-        {isLoggedIn && (
+        {isLoggedIn && user && (
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -84,7 +84,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   className="block px-4 py-2 text-white hover:bg-purple-700"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  Profil
+                  Profil - {user.name || user.username || "User"} {/* Assuming user has name or username property */}
                 </Link>
                 <Link
                   to="/payment-method"

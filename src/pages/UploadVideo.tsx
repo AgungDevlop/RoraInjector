@@ -5,7 +5,6 @@ const UploadVideo: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [cdnUrl, setCdnUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [shortlink, setShortlink] = useState<string | null>(null);
@@ -72,7 +71,6 @@ const UploadVideo: React.FC = () => {
         const response = JSON.parse(xhr.responseText);
         if (response.id) {
           const videoUrl = `https://cdn.videy.co/${response.id}.mp4`;
-          setCdnUrl(videoUrl);
           setUploadProgress(null);
 
           // Now send data to your local Node.js API

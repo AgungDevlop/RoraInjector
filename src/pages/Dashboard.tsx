@@ -100,7 +100,7 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4" data-aos="fade-down">
-        Dashboard
+        Dashboard - {user?.name || user?.username || "User"} {/* Using user data here */}
       </h1>
       
       {/* Upload Video Section */}
@@ -118,7 +118,7 @@ const Dashboard = () => {
               value={card.value} 
               description={card.description} 
               onClick={card.onClick} 
-              bgColor={card.bgColor} // Pass the background color class
+              bgColor={card.bgColor} 
             />
           </div>
         ))}
