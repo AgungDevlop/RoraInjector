@@ -1,7 +1,5 @@
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
-
-// Assuming graph.json is in the src directory
 import graphData from '../graph.json';
 
 // Define the type for graphData to ensure TypeScript compatibility
