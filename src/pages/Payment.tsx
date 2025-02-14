@@ -232,21 +232,29 @@ const Payment = () => {
         </div>
       )}
 
-      {/* Card Payment */}
-{/* Card Payment */}
+      {/* Card Payment */}{/* Card Payment */}
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-20">
   {cardData.map((card, index) => (
-    <div key={index} data-aos="fade-up" data-aos-delay={index * 100}>
-      <CardItem 
-        icon={card.icon} 
-        title={card.title} 
-        value={card.value} 
-        description={card.description} 
-        bgColor={card.bgColor}
-      />
+    <div 
+      key={index} 
+      data-aos="fade-up" 
+      data-aos-delay={index * 100}
+      className={`p-4 rounded shadow-md flex flex-col items-start ${card.bgColor || 'bg-gray-800'}`}
+      onClick={card.onClick} // If there's an onClick, you should pass it here
+      style={{ cursor: card.onClick ? 'pointer' : 'default' }}
+    >
+      <div className="flex items-center mb-2">
+        <div className="text-4xl mr-4">{card.icon}</div>
+        <div>
+          <h3 className="text-xl font-semibold">{card.title}</h3>
+          <p className="text-lg">{card.value}</p>
+        </div>
+      </div>
+      {card.description && <p className="text-sm text-gray-400">{card.description}</p>}
     </div>
   ))}
 </div>
+
 
       {/* Withdrawal Options - 2 grid 2 columns */}
       <div className="grid grid-cols-2 gap-4 mb-4">
