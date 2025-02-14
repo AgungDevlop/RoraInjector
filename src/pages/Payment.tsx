@@ -231,6 +231,7 @@ const Payment = () => {
           <p>Payment Method Berhasil Di Tambahkan</p>
         </div>
       )}
+
 {/* Card Payment */}
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-20">
   {cardData.map((card, index) => (
@@ -239,7 +240,7 @@ const Payment = () => {
       data-aos="fade-up" 
       data-aos-delay={index * 100}
       className={`p-4 rounded shadow-md flex flex-col items-start ${card.bgColor || 'bg-gray-800'}`}
-      {...(card.onClick && { onClick: card.onClick, style: { cursor: 'pointer' } })}
+      style={{ cursor: 'default' }} // If no interactivity is needed, set to default
     >
       <div className="flex items-center mb-2">
         <div className="text-4xl mr-4">{card.icon}</div>
@@ -252,7 +253,6 @@ const Payment = () => {
     </div>
   ))}
 </div>
-      {/* Card Payment */}
 
       {/* Withdrawal Options - 2 grid 2 columns */}
       <div className="grid grid-cols-2 gap-4 mb-4">
