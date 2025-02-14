@@ -232,42 +232,43 @@ const Payment = () => {
         </div>
       )}
 
-{/* Card Payment */}
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-20">
-  {cardData.map((card, index) => (
-    <div 
-      key={index} 
-      data-aos="fade-up" 
-      data-aos-delay={index * 100}
-      className={`p-4 rounded shadow-md flex flex-col items-start ${card.bgColor || 'bg-gray-800'}`}
-      style={{ cursor: 'default' }} // If no interactivity is needed, set to default
-    >
-      <div className="flex items-center mb-2">
-        <div className="text-4xl mr-4">{card.icon}</div>
-        <div>
-          <h3 className="text-xl font-semibold">{card.title}</h3>
-          <p className="text-lg">{card.value}</p>
-        </div>
-      </div>
-      {card.description && <p className="text-sm text-gray-400">{card.description}</p>}
-    </div>
-  ))}
-</div>
-
-      {/* Withdrawal Options - 2 grid 2 columns */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        {withdrawalOptions.map((option, index) => (
-          <div key={index} onClick={option.onClick} data-aos="fade-up" data-aos-delay={index * 100}>
+      {/* Card Payment */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-20">
+        {cardData.map((card, index) => (
+          <div key={index} data-aos="fade-up" data-aos-delay={index * 100}>
             <CardItem 
-              icon={option.icon} 
-              title={<span className="text-sm">{option.title}</span>}  
-              value={option.value} 
-              description={option.description} 
-              bgColor={option.bgColor}
+              icon={card.icon} 
+              title={card.title} 
+              value={card.value} 
+              description={card.description} 
+              bgColor={card.bgColor}
             />
           </div>
         ))}
       </div>
+
+{/* Withdrawal Options - 2 grid 2 columns */}
+<div className="grid grid-cols-2 gap-4 mb-4">
+  {withdrawalOptions.map((option, index) => (
+    <div 
+      key={index} 
+      onClick={option.onClick} 
+      data-aos="fade-up" 
+      data-aos-delay={index * 100}
+      className={`p-4 rounded shadow-md flex flex-col items-start ${option.bgColor || 'bg-gray-800'}`}
+      style={{ cursor: option.onClick ? 'pointer' : 'default' }}
+    >
+      <div className="flex items-center mb-2">
+        <div className="text-3xl mr-4">{option.icon}</div>
+        <div>
+          <h3 className="text-base font-semibold">{option.title}</h3> {/* Changed from text-xl to text-base */}
+          <p className="text-sm">{option.value}</p> {/* Changed from text-lg to text-sm */}
+        </div>
+      </div>
+      {option.description && <p className="text-xs text-gray-400">{option.description}</p>} {/* Changed from text-sm to text-xs */}
+    </div>
+  ))}
+</div>
 
       {requestError && <p className="text-red-500 text-center">{requestError}</p>}
       {error && <p className="text-red-500 text-center">{error}</p>}
