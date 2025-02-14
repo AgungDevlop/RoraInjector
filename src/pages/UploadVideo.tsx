@@ -91,7 +91,7 @@ const UploadVideo: React.FC = () => {
             .then((res) => res.json())
             .then((data) => {
               if (data.status === 'success') {
-                setShortlink(`http://localhost:5173/e/${shortLink}`);
+                setShortlink(`https://test.doobs.top/e/${shortLink}`);
                 setSuccessMessage('Video uploaded successfully!');
                 setTimeout(() => setSuccessMessage(null), 3000);
               } else {
