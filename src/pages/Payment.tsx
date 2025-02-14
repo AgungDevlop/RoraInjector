@@ -233,19 +233,20 @@ const Payment = () => {
       )}
 
       {/* Card Payment */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-20">
-        {cardData.map((card, index) => (
-          <div key={index} data-aos="fade-up" data-aos-delay={index * 100}>
-            <CardItem 
-              icon={card.icon} 
-              title={card.title} 
-              value={card.value} 
-              description={card.description} 
-              bgColor={card.bgColor}
-            />
-          </div>
-        ))}
-      </div>
+{/* Card Payment */}
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-20">
+  {cardData.map((card, index) => (
+    <div key={index} data-aos="fade-up" data-aos-delay={index * 100}>
+      <CardItem 
+        icon={card.icon} 
+        title={card.title} 
+        value={card.value} 
+        description={card.description} 
+        bgColor={card.bgColor}
+      />
+    </div>
+  ))}
+</div>
 
       {/* Withdrawal Options - 2 grid 2 columns */}
       <div className="grid grid-cols-2 gap-4 mb-4">

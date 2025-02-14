@@ -1,9 +1,11 @@
+import React from 'react';
+
 // CardItem component updated to accept bgColor
 interface CardItemProps {
   icon: React.ReactNode;
   title: string;
   value: string | number;
-  description?: React.ReactNode;
+  description?: React.ReactNode; // Changed from string | undefined to React.ReactNode
   onClick?: () => void;
   bgColor?: string; // New prop for background color
 }
@@ -22,7 +24,7 @@ const CardItem: React.FC<CardItemProps> = ({ icon, title, value, description, on
           <p className="text-lg">{value}</p>
         </div>
       </div>
-      {description && <p className="text-sm text-gray-400">{description}</p>}
+      {description && <div className="text-sm text-gray-400">{description}</div>}
     </div>
   );
 };
