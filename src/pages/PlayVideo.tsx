@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaStepBackward, FaStepForward } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaStepBackward, FaStepForward, FaShareAlt } from 'react-icons/fa';
 
 interface VideoData {
   video_id: number;
@@ -59,6 +59,20 @@ export function PlayVideo() {
 
   const recordFullScreen = async () => {
     addImpression('full_screen');
+  };
+
+  const seekBackward = () => {
+    if (playerRef.current) {
+      const currentTime = playerRef.current.getCurrentTime();
+      playerRef.current.seekTo(Math.max(currentTime - 10, 0));
+    }
+  };
+
+  const seekForward = () => {
+    if (playerRef.current) {
+      const currentTime = playerRef.current.getCurrentTime();
+      playerRef.current.seekTo(currentTime + 10);
+    }
   };
 
   useEffect(() => {
@@ -189,45 +203,48 @@ export function PlayVideo() {
               },
             }}
             className="aspect-video"
-            style={{ marginBottom: '20px' }} // adjust as needed to move video source up
+            style={{ marginTop: '10px' }}
           />
 
-          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex items-center text-white">
-            <div className="flex items-center space-x-2">
-              <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
-                {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
-              </button>
+          <div className="watermark absolute top-2 left-2 text-sm text-white opacity-70">
+            Vidify
+          </div>
+
+          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex flex-col items-center text-white">
+            <div className="flex justify-between items-center w-full">
               <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
                 {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
               </button>
-              <button className="hover:text-purple-300 transition-all">
-                <FaStepBackward size={14} />
+              <button onClick={seekBackward} className="hover:text-purple-300 transition-all">
+                <FaStepBackward size={16} />
               </button>
-              <button className="hover:text-purple-300 transition-all">
-                <FaStepForward size={14} />
+              <button onClick={seekForward} className="hover:text-purple-300 transition-all">
+                <FaStepForward size={16} />
+              </button>
+              <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
+                {isMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
               </button>
               <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all">
-                <FaExpand size={14} />
+                <FaExpand size={16} />
+              </button>
+            </div>
+            <div className="flex items-center w-full justify-between mt-1">
+              <input
+                type="text"
+                value={currentUrl}
+                readOnly
+                className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
+              />
+              <button
+                onClick={shareVideo}
+                className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
+              >
+                <FaShareAlt className="mr-1" size={12} />
+                Share
               </button>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="w-full max-w-6xl px-4 mt-2 flex justify-center items-center">
-        <input
-          type="text"
-          value={currentUrl}
-          readOnly
-          className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
-        />
-        <button
-          onClick={shareVideo}
-          className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
-        >
-          <FaShareAlt className="mr-1" size={12} />
-          Share
-        </button>
       </div>
     </div>
   );
