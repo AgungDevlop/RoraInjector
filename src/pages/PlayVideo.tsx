@@ -12,12 +12,12 @@ export function PlayVideo() {
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isBuffering, setIsBuffering] = useState<boolean>(false);
   const hasAddedImpression = useRef<boolean>(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [userIp, setUserIp] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-  // Fungsi untuk mengambil alamat IP dari API
+  // Fetch user IP
   const fetchUserIp = async () => {
     try {
       const response = await fetch('https://api.ipify.org?format=json');
@@ -29,7 +29,7 @@ export function PlayVideo() {
     }
   };
 
-  // Fungsi untuk menambahkan impression
+  // Add impression
   const addImpression = async (type: 'play' | 'full_screen') => {
     if (hasAddedImpression.current || !videoData?.video_id || !userIp) return;
 
@@ -55,6 +55,7 @@ export function PlayVideo() {
     addImpression('full_screen');
   };
 
+  // Fetch video data
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
@@ -76,17 +77,22 @@ export function PlayVideo() {
     fetchUserIp();
   }, [id]);
 
+  // Video event listeners
   useEffect(() => {
     if (videoRef.current) {
       const videoElement = videoRef.current;
 
       const handlePlay = () => {
-        setIsPlaying(true);
         addImpression('play');
+        setIsBuffering(false);
       };
 
-      const handlePause = () => {
-        setIsPlaying(false);
+      const handleWaiting = () => {
+        setIsBuffering(true);
+      };
+
+      const handleCanPlay = () => {
+        setIsBuffering(false);
       };
 
       const handleVisibilityChange = () => {
@@ -105,39 +111,35 @@ export function PlayVideo() {
         }
       };
 
+      const handleError = () => {
+        setError('Gagal memutar video. Silakan coba lagi.');
+      };
+
       videoElement.addEventListener('play', handlePlay);
-      videoElement.addEventListener('pause', handlePause);
+      videoElement.addEventListener('waiting', handleWaiting);
+      videoElement.addEventListener('canplay', handleCanPlay);
       videoElement.addEventListener('contextmenu', handleContextMenu);
+      videoElement.addEventListener('error', handleError);
       document.addEventListener('visibilitychange', handleVisibilityChange);
       document.addEventListener('fullscreenchange', handleFullScreenChange);
 
       return () => {
         videoElement.removeEventListener('play', handlePlay);
-        videoElement.removeEventListener('pause', handlePause);
+        videoElement.removeEventListener('waiting', handleWaiting);
+        videoElement.removeEventListener('canplay', handleCanPlay);
         videoElement.removeEventListener('contextmenu', handleContextMenu);
+        videoElement.removeEventListener('error', handleError);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
         document.removeEventListener('fullscreenchange', handleFullScreenChange);
       };
     }
   }, [videoData, userIp]);
 
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
-        <div className="relative flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-          <p className="absolute text-white text-lg font-medium">Memuat video...</p>
-        </div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+        <p className="text-white ml-4">Memuat video...</p>
       </div>
     );
   }
@@ -146,7 +148,7 @@ export function PlayVideo() {
     return (
       <div className="flex flex-col justify-center items-center h-screen bg-gray-900 text-center">
         <svg
-          className="w-20 h-20 text-red-500 mb-6"
+          className="w-16 h-16 text-red-500 mb-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -159,10 +161,10 @@ export function PlayVideo() {
             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           ></path>
         </svg>
-        <p className="text-red-500 text-xl font-medium mb-4">{error}</p>
+        <p className="text-red-500 text-lg">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300"
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
         >
           Coba Lagi
         </button>
@@ -172,46 +174,27 @@ export function PlayVideo() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-full max-w-6xl">
-        <h1 className="text-3xl font-semibold text-white mb-6 text-center break-words">
-          {videoData?.title}
-        </h1>
+      <h1 className="text-3xl font-semibold mb-6 text-center text-white break-words max-w-4xl">
+        {videoData?.title}
+      </h1>
 
-        <div className="relative w-full rounded-xl overflow-hidden shadow-2xl bg-black group">
-          <video
-            ref={videoRef}
-            src={videoData?.video_url}
-            controls
-            controlsList="nodownload"
-            className="w-full h-auto aspect-video object-contain"
-            preload="metadata"
-          >
-            Browser Anda tidak mendukung tag video.
-          </video>
-
-          {/* Overlay untuk tombol play/pause */}
-          <div
-            className={`absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${
-              isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
-            }`}
-            onClick={togglePlayPause}
-          >
-            <button
-              className="text-white bg-blue-600 hover:bg-blue-700 rounded-full p-4 transition-all duration-300"
-              aria-label={isPlaying ? 'Pause' : 'Play'}
-            >
-              {isPlaying ? (
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                </svg>
-              ) : (
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              )}
-            </button>
+      <div className="relative w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl border border-gray-700 transition-all hover:shadow-3xl">
+        {isBuffering && (
+          <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-blue-500"></div>
           </div>
-        </div>
+        )}
+        <video
+          ref={videoRef}
+          src={videoData?.video_url}
+          controls
+          controlsList="nodownload"
+          className="w-full h-auto aspect-video object-cover custom-video-player"
+          preload="metadata"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          Browser Anda tidak mendukung tag video.
+        </video>
       </div>
     </div>
   );
