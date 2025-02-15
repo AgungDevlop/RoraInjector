@@ -33,7 +33,7 @@ export function PlayVideo() {
     if (hasAddedImpression.current || !videoData?.video_id || !userIp) return;
 
     try {
-      const response = await fetch('https://server.agungbot.my.id/api/impression', {
+      const response = await fetch('https://videyhost.my.id/api/impression', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ videoId: videoData.video_id, userIp }),
@@ -58,7 +58,7 @@ export function PlayVideo() {
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`https://server.agungbot.my.id/api/video/${id}`);
+        const response = await fetch(`https://videyhost.my.id/api/video/${id}`);
         if (!response.ok) {
           throw new Error('Video tidak ditemukan.');
         }

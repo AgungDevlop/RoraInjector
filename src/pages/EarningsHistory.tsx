@@ -27,7 +27,7 @@ const EarningsHistory: React.FC = () => {
   const fetchEarningsHistory = async (userId: number, start: string, end: string) => {
     try {
       setLoading(true);
-      let url = `https://server.agungbot.my.id/api/daily-analytics?user_id=${userId}&sort_by=date&sort_order=DESC`;
+      let url = `https://videyhost.my.id/api/daily-analytics?user_id=${userId}&sort_by=date&sort_order=DESC`;
       if (start && end) {
         url += `&start_date=${start}&end_date=${end}`;
       }

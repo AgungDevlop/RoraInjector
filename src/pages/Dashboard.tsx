@@ -26,13 +26,13 @@ const Dashboard = () => {
       setLoading(true);
 
       // Gunakan endpoint baru untuk ambil total revenue, total impressions, dan average CPM
-      const revenueResponse = await axios.get(`https://server.agungbot.my.id/api/total-revenue?user_id=${userId}`);
+      const revenueResponse = await axios.get(`https://videyhost.my.id/api/total-revenue?user_id=${userId}`);
       setRevenueToday(parseFloat(revenueResponse.data.totalRevenue));
       setImpressionsToday(revenueResponse.data.totalImpressions);
       setCpm(parseFloat(revenueResponse.data.avgCpm));
 
       // Ambil total saldo dari endpoint /total-balance
-      const balanceResponse = await axios.get(`https://server.agungbot.my.id/api/total-balance?user_id=${userId}`);
+      const balanceResponse = await axios.get(`https://videyhost.my.id/api/total-balance?user_id=${userId}`);
       setTotalBalance(parseFloat(balanceResponse.data.total_balance));
 
     } catch (error) {

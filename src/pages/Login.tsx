@@ -13,7 +13,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://server.agungbot.my.id/api/login", {
+      const response = await fetch("https://videyhost.my.id/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: identifier, password }),

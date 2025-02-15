@@ -40,7 +40,7 @@ const WithdrawalHistory: React.FC = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://server.agungbot.my.id/api/transactions/${userId}`,
+          `https://videyhost.my.id/api/transactions/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,

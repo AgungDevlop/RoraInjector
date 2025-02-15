@@ -19,6 +19,10 @@ import EarningsHistory from "./pages/EarningsHistory";
 import WithdrawalHistory from "./pages/WithdrawalHistory"; // Pastikan sudah diimport
 import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AboutUs from "./pages/AboutUs";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import Disclaimer from "./pages/Disclaimer";
 
 const ErrorFallback = (
   <div className="text-center text-red-500 p-4">
@@ -140,6 +144,26 @@ const router = createBrowserRouter([
       {
         path: "s/:id",
         element: <Redirect />,
+        errorElement: ErrorFallback,
+      },
+      {
+        path: "privacy-policy",
+        element: <PrivacyPolicy />,
+        errorElement: ErrorFallback,
+      },
+      {
+        path: "about-us",
+        element: <AboutUs />,
+        errorElement: ErrorFallback,
+      },
+      {
+        path: "terms-and-conditions",
+        element: <TermsAndConditions />,
+        errorElement: ErrorFallback,
+      },
+      {
+        path: "disclaimer",
+        element: <Disclaimer />,
         errorElement: ErrorFallback,
       },
     ],

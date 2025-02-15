@@ -17,7 +17,7 @@ const Profile = () => {
           setUser(parsedUser);
 
           // Fetch balance from the API
-          const response = await axios.get(`https://server.agungbot.my.id/api/total-balance?user_id=${parsedUser.user_id}`);
+          const response = await axios.get(`https://videyhost.my.id/api/total-balance?user_id=${parsedUser.user_id}`);
           setBalance(response.data.total_balance);
         }
       } catch (err) {

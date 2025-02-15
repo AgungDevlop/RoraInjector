@@ -31,7 +31,7 @@ const PaymentMethod = () => {
       const userId = user.user_id;
       console.log("Mengambil metode pembayaran untuk ID pengguna:", userId);
       try {
-        const res = await fetch(`https://server.agungbot.my.id/user-payment-methods/${userId}`);
+        const res = await fetch(`https://videyhost.my.id/api/user-payment-methods/${userId}`);
         const data = await res.json();
         console.log("Data dari server:", data);
       } catch (error) {
@@ -63,7 +63,7 @@ const PaymentMethod = () => {
       bank_name: selectedMethod?.toLowerCase() === "bank" ? bankName : null,
     };
 
-    const url = "https://server.agungbot.my.id/api/user-payment-methods";
+    const url = "https://videyhost.my.id/api/user-payment-methods";
     const method = "POST";
 
     try {

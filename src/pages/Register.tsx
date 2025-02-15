@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import Modal from './element/ModalRegister'; // Import the Modal component
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: "", message: "" });
   const navigate = useNavigate();
 
   const faviconUrl =
@@ -15,22 +18,41 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://server.agungbot.my.id/api/register", {
+      const response = await fetch("https://videyhost.my.id/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
       });
       const data = await response.json();
       if (response.ok) {
-        alert("Registrasi berhasil, silakan login!");
-        navigate("/login");
+        setModalContent({
+          title: "Success",
+          message: "Registrasi berhasil, silakan login!"
+        });
+        setModalOpen(true);
+        setTimeout(() => {
+          setModalOpen(false);
+          navigate("/login");
+        }, 2000); // Automatically navigate after showing the modal for 2 seconds
       } else {
-        alert(data.message);
+        setModalContent({
+          title: "Error",
+          message: data.message || "Terjadi kesalahan saat registrasi"
+        });
+        setModalOpen(true);
       }
     } catch (error) {
       console.error("Registration error:", error);
-      alert("Terjadi kesalahan saat registrasi");
+      setModalContent({
+        title: "Error",
+        message: "Terjadi kesalahan saat registrasi"
+      });
+      setModalOpen(true);
     }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -120,6 +142,12 @@ const Register = () => {
           </Link>
         </p>
       </div>
+      <Modal 
+        isOpen={modalOpen} 
+        onClose={closeModal} 
+        title={modalContent.title} 
+        message={modalContent.message}
+      />
     </div>
   );
 };

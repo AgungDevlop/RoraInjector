@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         const userData = JSON.parse(user);
 
         // Check if the user exists in the database
-        const response = await axios.get(`https://server.agungbot.my.id/api/check-user/${userData.user_id}`); // Adjust URL as per your backend setup
+        const response = await axios.get(`https://videyhost.my.id/api/check-user/${userData.user_id}`); // Adjust URL as per your backend setup
         if (response.data.exists) {
           setIsAuthenticated(true);
         } else {

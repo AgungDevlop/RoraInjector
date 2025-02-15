@@ -24,17 +24,17 @@ const Payment = () => {
         const user = JSON.parse(storedUser);
 
         // Fetch balance
-        const balanceResponse = await axios.get(`https://server.agungbot.my.id/api/total-balance?user_id=${user.user_id}`);
+        const balanceResponse = await axios.get(`https://videyhost.my.id/api/total-balance?user_id=${user.user_id}`);
         setBalance(parseFloat(balanceResponse.data.total_balance));
 
         // Fetch payment method
-        const paymentMethodResponse = await axios.get(`https://server.agungbot.my.id/api/user-payment-methods/${user.user_id}`);
+        const paymentMethodResponse = await axios.get(`https://videyhost.my.id/api/user-payment-methods/${user.user_id}`);
         if (paymentMethodResponse.data.length > 0) {
           setPaymentMethod(paymentMethodResponse.data[0]);
         }
 
         // Fetch payment requests
-        const paymentRequestsResponse = await axios.get(`https://server.agungbot.my.id/api/payment-requests/${user.user_id}`);
+        const paymentRequestsResponse = await axios.get(`https://videyhost.my.id/api/payment-requests/${user.user_id}`);
         setPaymentRequests(paymentRequestsResponse.data);
 
         setLoading(false);
@@ -81,7 +81,7 @@ const Payment = () => {
         return;
       }
 
-      const response = await axios.post('https://server.agungbot.my.id/api/payment-request', {
+      const response = await axios.post('https://videyhost.my.id/api/payment-request', {
         user_id: user.user_id,
         payment_method: paymentMethod.payment_method,
         payment_account: paymentMethod.account_number,

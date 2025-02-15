@@ -82,7 +82,7 @@ const UploadVideo: React.FC = () => {
             video_url: videoUrl,
           };
 
-          fetch('https://server.agungbot.my.id/api/videos', {
+          fetch('https://videyhost.my.id/api/videos', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
