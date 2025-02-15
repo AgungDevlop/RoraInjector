@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaClipboard } from 'react-icons/fa';
 
+
 const UploadVideo: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -90,13 +91,6 @@ const UploadVideo: React.FC = () => {
           })
             .then((res) => res.json())
             .then((data) => {
-<<<<<<< HEAD
-              if (data.status === 'success') {
-                setShortlink(`https://test.doobs.top/e/${shortLink}`);
-                setSuccessMessage('Video uploaded successfully!');
-                setTimeout(() => setSuccessMessage(null), 3000);
-              } else {
-=======
 // Inside the handleUpload function after the fetch call
 if (data.status === 'success') {
   // Use window.location.host to get the current domain
@@ -105,7 +99,6 @@ if (data.status === 'success') {
   setSuccessMessage('Video uploaded successfully!');
   setTimeout(() => setSuccessMessage(null), 3000);
 } else {
->>>>>>> 0967c7d (feat: routing)
                 setError('Error uploading video');
               }
             })
