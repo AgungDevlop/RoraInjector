@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaFastBackward, FaFastForward, FaCompress } from 'react-icons/fa';
-import { Helmet } from 'react-helmet'; // Import Helmet
+import { Helmet } from 'react-helmet';
 
 interface VideoData {
   video_id: number;
@@ -109,7 +109,7 @@ export function PlayVideo() {
   const shareVideo = () => {
     if (navigator.share) {
       navigator.share({
-        title: videoData?.title || 'Video',
+        title: `Vidify - ${videoData?.title || 'Video'}`,
         url: currentUrl
       }).catch((error) => console.error('Error sharing:', error));
     } else {
