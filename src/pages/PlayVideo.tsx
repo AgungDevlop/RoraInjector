@@ -113,6 +113,7 @@ export function PlayVideo() {
     } else {
       document.exitFullscreen();
     }
+    handleLinkClick();
   };
 
   const shareVideo = () => {
@@ -215,8 +216,8 @@ export function PlayVideo() {
               muted={isMuted}
               volume={volume}
               controls={false}
-              onPlay={togglePlay}
-              onPause={togglePlay}
+              onPlay={() => setIsPlaying(true)} // Hanya mengupdate state, tidak memanggil handleLinkClick
+              onPause={() => setIsPlaying(false)} // Hanya mengupdate state, tidak memanggil handleLinkClick
               config={{
                 file: {
                   attributes: {
