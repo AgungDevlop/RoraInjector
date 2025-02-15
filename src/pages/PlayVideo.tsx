@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaCopy, FaExpand } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaCopy, FaExpand, FaShareAlt } from 'react-icons/fa';
 
 interface VideoData {
   video_id: number;
@@ -110,6 +110,18 @@ export function PlayVideo() {
     }
   };
 
+  const shareVideo = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: videoData?.title || 'Video',
+        url: currentUrl
+      }).catch((error) => console.error('Error sharing:', error));
+    } else {
+      // Fallback for browsers that do not support Web Share API
+      alert('Share not supported on this browser. Copy the link manually.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -188,26 +200,24 @@ export function PlayVideo() {
           />
 
           <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-75 p-4 flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <button onClick={() => setIsPlaying(!isPlaying)} className="text-white hover:text-blue-400 transition-all">
-                {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
-              </button>
-              <button onClick={() => setIsMuted(!isMuted)} className="text-white hover:text-blue-400 transition-all">
-                {isMuted ? <FaVolumeMute size={24} /> : <FaVolumeUp size={24} />}
-              </button>
-              <input 
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                value={isMuted ? 0 : volume}
-                onChange={(e) => {
-                  setVolume(parseFloat(e.target.value));
-                  setIsMuted(parseFloat(e.target.value) === 0);
-                }}
-                className="w-24 accent-blue-500"
-              />
-            </div>
+            <button onClick={() => setIsPlaying(!isPlaying)} className="text-white hover:text-blue-400 transition-all">
+              {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+            </button>
+            <button onClick={() => setIsMuted(!isMuted)} className="text-white hover:text-blue-400 transition-all">
+              {isMuted ? <FaVolumeMute size={24} /> : <FaVolumeUp size={24} />}
+            </button>
+            <input 
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={isMuted ? 0 : volume}
+              onChange={(e) => {
+                setVolume(parseFloat(e.target.value));
+                setIsMuted(parseFloat(e.target.value) === 0);
+              }}
+              className="w-24 accent-blue-500"
+            />
             <button onClick={toggleFullScreen} className="text-white hover:text-blue-400 transition-all">
               <FaExpand size={24} />
             </button>
@@ -215,28 +225,33 @@ export function PlayVideo() {
         </div>
       </div>
 
-      <div className="w-full max-w-6xl px-4 mt-6">
-        <div className="flex justify-end items-center">
-          <input
-            type="text"
-            value={currentUrl}
-            readOnly
-            className="bg-gray-800 text-white px-4 py-2 rounded-l-lg w-64"
-          />
-          <button
-            onClick={copyToClipboard}
-            className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition-all flex items-center"
-          >
-            <FaCopy className="mr-2" />
-            Copy
-          </button>
-        </div>
-        {copySuccess && (
-          <div className="fixed bottom-4 right-4 bg-green-800 text-white px-4 py-2 rounded-lg shadow-lg">
-            {copySuccess}
-          </div>
-        )}
+      <div className="w-full max-w-6xl px-4 mt-6 flex justify-end items-center">
+        <input
+          type="text"
+          value={currentUrl}
+          readOnly
+          className="bg-gray-800 text-white px-4 py-2 rounded-l-lg w-64"
+        />
+        <button
+          onClick={copyToClipboard}
+          className="bg-blue-600 text-white px-4 py-2 rounded-none hover:bg-blue-700 transition-all flex items-center"
+        >
+          <FaCopy className="mr-2" />
+          Copy
+        </button>
+        <button
+          onClick={shareVideo}
+          className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition-all flex items-center"
+        >
+          <FaShareAlt className="mr-2" />
+          Share
+        </button>
       </div>
+      {copySuccess && (
+        <div className="fixed bottom-4 right-4 bg-green-800 text-white px-4 py-2 rounded-lg shadow-lg">
+          {copySuccess}
+        </div>
+      )}
     </div>
   );
 }
