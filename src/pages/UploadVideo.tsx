@@ -1,264 +1,264 @@
-import { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import ReactPlayer from 'react-player';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaStepBackward, FaStepForward, FaShareAlt } from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
+import { FaClipboard } from 'react-icons/fa';
 
-interface VideoData {
-  video_id: number;
-  video_url: string;
-  title: string;
-  description?: string;
-  duration?: string;
-}
-
-const PlayVideo: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [videoData, setVideoData] = useState<VideoData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+const UploadVideo: React.FC = () => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const hasAddedImpression = useRef<boolean>(false);
-  const [userIp, setUserIp] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [volume, setVolume] = useState<number>(0.8);
-  const playerRef = useRef<ReactPlayer | null>(null);
-  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [shortlink, setShortlink] = useState<string | null>(null);
+  const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
-  const currentUrl = window.location.href;
+  // Batas maksimum ukuran file (100MB dalam byte)
+  const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
-  const fetchUserIp = async () => {
-    try {
-      const response = await fetch('https://api.ipify.org?format=json');
-      const data = await response.json();
-      setUserIp(data.ip);
-    } catch (error) {
-      console.error('Error fetching IP address:', error);
-      setUserIp('unknown');
+  // Function to generate a random shortlink with 10 characters
+  const generateShortlink = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 10; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
+    return result;
   };
 
-  const addImpression = async (type: 'play' | 'full_screen') => {
-    if (hasAddedImpression.current || !videoData?.video_id || !userIp) return;
+  // Extract the title from the video filename and remove .mp4
+  const extractTitleFromFileName = (fileName: string) => {
+    const nameWithoutExtension = fileName.split('.').slice(0, -1).join('.');
+    return nameWithoutExtension;
+  };
 
-    try {
-      const response = await fetch('https://videyhost.my.id/api/impression', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videoId: videoData.video_id, userIp }),
-      });
-
-      if (response.ok) {
-        hasAddedImpression.current = true;
-        console.log(`Impression (${type}) added successfully`);
-      } else {
-        throw new Error(`Failed to add impression (${type})`);
+  // Handle file selection with size validation
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      if (file.size > MAX_FILE_SIZE) {
+        setError('Ukuran file melebihi batas maksimum 100MB.');
+        setSelectedFile(null);
+        return;
       }
-    } catch (error) {
-      console.error('Error adding impression:', error);
+      setSelectedFile(file);
+      setError(null); // Reset error jika file valid
     }
   };
 
-  const recordFullScreen = async () => {
-    addImpression('full_screen');
-  };
-
-  const seekBackward = () => {
-    if (playerRef.current) {
-      const currentTime = playerRef.current.getCurrentTime();
-      playerRef.current.seekTo(Math.max(currentTime - 10, 0));
+  // Copy shortlink to clipboard
+  const copyToClipboard = () => {
+    if (shortlink) {
+      navigator.clipboard.writeText(shortlink);
+      setCopySuccess('Shortlink berhasil disalin!');
+      setTimeout(() => setCopySuccess(null), 2000);
     }
   };
 
-  const seekForward = () => {
-    if (playerRef.current) {
-      const currentTime = playerRef.current.getCurrentTime();
-      playerRef.current.seekTo(currentTime + 10);
+  // Handle video upload with size validation
+  const handleUpload = () => {
+    if (!selectedFile) {
+      setError('Pilih file video terlebih dahulu.');
+      return;
     }
-  };
 
-  useEffect(() => {
-    const fetchVideoData = async () => {
-      try {
-        const response = await fetch(`https://videyhost.my.id/api/video/${id}`);
-        if (!response.ok) {
-          throw new Error('Video not found.');
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setError('Ukuran file melebihi batas maksimum 100MB.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    const xhr = new XMLHttpRequest();
+    const shortLink = generateShortlink();
+    const title = extractTitleFromFileName(selectedFile.name);
+
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    const user_id = user?.user_id;
+
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percentComplete);
+      }
+    });
+
+    xhr.open('POST', 'https://videy.co/api/upload', true);
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.id) {
+          const videoUrl = `https://cdn.videy.co/${response.id}.mp4`;
+          setUploadProgress(null);
+
+          const payload = {
+            shortlink: shortLink,
+            title: title,
+            user_id: user_id,
+            video_url: videoUrl,
+          };
+
+          fetch('https://videyhost.my.id/api/videos', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.status === 'success') {
+                const host = window.location.host;
+                setShortlink(`http://${host}/e/${shortLink}`);
+                setSuccessMessage('Video berhasil diunggah!');
+                setTimeout(() => setSuccessMessage(null), 3000);
+              } else {
+                setError('Gagal mengunggah video.');
+              }
+            })
+            .catch((err) => {
+              console.error('Gagal menyimpan data:', err);
+              setError('Gagal menyimpan data ke server.');
+            });
+        } else {
+          setError('Respons server tidak valid.');
+          setUploadProgress(null);
         }
-        const data: VideoData = await response.json();
-        setVideoData(data);
-        setLoading(false);
-      } catch (error: any) {
-        setError(error.message);
-        setLoading(false);
+      } else {
+        setError('Gagal mengunggah video.');
+        setUploadProgress(null);
       }
     };
 
-    fetchVideoData();
-    fetchUserIp();
-  }, [id]);
-
-  useEffect(() => {
-    const handleFullScreenChange = () => {
-      if (document.fullscreenElement) {
-        recordFullScreen();
-      }
+    xhr.onerror = () => {
+      setError('Gagal mengunggah karena masalah jaringan.');
+      setUploadProgress(null);
     };
 
-    document.addEventListener('fullscreenchange', handleFullScreenChange);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullScreenChange);
-    };
-  }, [videoData, userIp]);
-
-  const toggleFullScreen = () => {
-    if (!document.fullscreenElement) {
-      playerRef.current?.getInternalPlayer()?.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
+    xhr.send(formData);
   };
-
-  const shareVideo = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: videoData?.title || 'Video',
-        url: currentUrl
-      }).catch((error) => console.error('Error sharing:', error));
-    } else {
-      toast.info('Share not supported on this browser. Copy the link manually.', {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-purple-500"></div>
-        <p className="text-white ml-4 text-lg">Loading video...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen text-center bg-gray-900">
-        <svg
-          className="w-16 h-16 text-red-500 mb-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          ></path>
-        </svg>
-        <p className="text-red-500 text-lg">{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
-      <header className="w-full max-w-6xl px-4 py-6">
-        <h1 className="text-4xl font-bold mb-2 text-center break-words">{videoData?.title}</h1>
-        {videoData?.description && (
-          <p className="text-gray-400 text-center mb-4">{videoData.description}</p>
-        )}
-        {videoData?.duration && (
-          <p className="text-gray-500 text-sm text-center">Duration: {videoData.duration}</p>
-        )}
-      </header>
+    <div
+      className="flex flex-col items-center justify-center w-full text-white"
+      style={{ background: 'radial-gradient(circle at center, #2c003e, #1a0027)' }}
+    >
+      {/* Informasi batas ukuran file */}
+      <p className="text-gray-300 text-sm mb-4">
+        Maksimum ukuran file: 100MB. Format yang didukung: video (MP4, AVI, dll).
+      </p>
 
-      <div className="w-full max-w-6xl px-4">
-        <div className="relative rounded-xl overflow-hidden shadow-2xl border border-purple-700 transition-all hover:shadow-3xl">
-          <ReactPlayer
-            ref={playerRef}
-            url={videoData?.video_url}
-            width="100%"
-            height="100%"
-            playing={isPlaying}
-            muted={isMuted}
-            volume={volume}
-            controls={false}
-            onPlay={() => {
-              setIsPlaying(true);
-              addImpression('play');
-            }}
-            onPause={() => setIsPlaying(false)}
-            config={{
-              file: {
-                attributes: {
-                  controlsList: 'nodownload',
-                  onContextMenu: (e: React.MouseEvent<HTMLVideoElement>) => e.preventDefault(),
-                  preload: 'metadata',
-                },
-              },
-            }}
-            className="aspect-video"
-            style={{ marginTop: '10px' }}
-          />
-
-          <div className="watermark absolute top-2 left-2 text-sm text-white opacity-70">
-            Vidify
-          </div>
-
-          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex flex-col items-center text-white">
-            <div className="flex justify-between items-center w-full">
-              <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
-                {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
-              </button>
-              <button onClick={seekBackward} className="hover:text-purple-300 transition-all">
-                <FaStepBackward size={16} />
-              </button>
-              <button onClick={seekForward} className="hover:text-purple-300 transition-all">
-                <FaStepForward size={16} />
-              </button>
-              <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
-                {isMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-              </button>
-              <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all">
-                <FaExpand size={16} />
-              </button>
-            </div>
-            <div className="flex items-center w-full justify-between mt-1">
-              <input
-                type="text"
-                value={currentUrl}
-                readOnly
-                className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
+      {/* File upload UI */}
+      <div
+        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-300 w-full ${
+          isDragging ? 'border-purple-300' : 'border-purple-500'
+        }`}
+        style={{ backgroundColor: '#1a0027' }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+          if (e.dataTransfer.files) {
+            const file = e.dataTransfer.files[0];
+            if (file.size > MAX_FILE_SIZE) {
+              setError('Ukuran file melebihi batas maksimum 100MB.');
+              setSelectedFile(null);
+              return;
+            }
+            setSelectedFile(file);
+            setError(null);
+          }
+        }}
+        onClick={() => document.getElementById('fileInput')?.click()}
+      >
+        {selectedFile ? (
+          <p className="text-white font-semibold text-lg break-words">
+            File Terpilih: {selectedFile.name}
+          </p>
+        ) : (
+          <>
+            <p className="text-white font-semibold text-lg mb-4">Seret dan Lepas Video Anda</p>
+            <svg
+              className="mx-auto w-16 h-16 text-purple-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8v8m4-4H8m16 12V6a2 2 0 00-2-2H6a2 2 0 00-2 2v16a2 2 0 002 2h16a2 2 0 002-2z"
               />
-              <button
-                onClick={shareVideo}
-                className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
-              >
-                <FaShareAlt className="mr-1" size={12} />
-                Share
-              </button>
-            </div>
-          </div>
-        </div>
+            </svg>
+          </>
+        )}
       </div>
+
+      <input
+        id="fileInput"
+        type="file"
+        onChange={handleFileChange}
+        accept="video/*"
+        className="hidden"
+      />
+
+      {uploadProgress !== null && (
+        <div className="mt-4 w-full bg-purple-900 rounded-full h-2">
+          <div
+            className="bg-purple-500 h-2 rounded-full"
+            style={{ width: `${uploadProgress}%` }}
+          ></div>
+        </div>
+      )}
+
+      <button
+        className="mt-4 bg-purple-700 text-white px-4 py-2 w-full rounded-lg transition-all duration-300 hover:bg-purple-800"
+        onClick={handleUpload}
+      >
+        Unggah Video
+      </button>
+
+      {/* Shortlink Input with Copy Icon */}
+      {shortlink && (
+        <div className="mt-4 w-full flex items-center">
+          <input
+            type="text"
+            value={shortlink}
+            readOnly
+            className="bg-purple-900 text-white w-full px-4 py-2 rounded-l-lg"
+          />
+          <button
+            onClick={copyToClipboard}
+            className="bg-purple-700 text-white px-4 py-2 rounded-r-lg hover:bg-purple-800"
+          >
+            <FaClipboard className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      {/* Success Toast */}
+      {successMessage && (
+        <div className="fixed bottom-4 right-4 bg-green-800 text-white px-4 py-2 rounded-lg shadow-lg">
+          {successMessage}
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && <p className="mt-4 text-red-500">{error}</p>}
+
+      {/* Copy Success Notification */}
+      {copySuccess && (
+        <div className="fixed bottom-16 right-4 bg-purple-700 text-white px-4 py-2 rounded-lg shadow-lg">
+          {copySuccess}
+        </div>
+      )}
     </div>
   );
 };
 
-export default PlayVideo;
+export default UploadVideo;
