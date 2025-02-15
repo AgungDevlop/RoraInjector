@@ -22,6 +22,7 @@ export function PlayVideo() {
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.8);
   const playerRef = useRef<ReactPlayer | null>(null);
+  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
   const currentUrl = window.location.href;
 
@@ -83,6 +84,7 @@ export function PlayVideo() {
 
   useEffect(() => {
     const handleFullScreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
       if (document.fullscreenElement) {
         recordFullScreen();
       }
@@ -199,7 +201,7 @@ export function PlayVideo() {
             className="aspect-video"
           />
 
-          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-1 flex flex-col items-center text-white">
+          <div className={`absolute bottom-0 left-0 right-0 ${isFullScreen ? 'bg-purple-800' : 'bg-purple-800 bg-opacity-75'} p-1 flex flex-col items-center text-white`}>
             <div className="flex w-full justify-between items-center">
               <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all ml-2">
                 {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
@@ -228,11 +230,26 @@ export function PlayVideo() {
                 </button>
               </div>
               <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all mr-2">
-                {document.fullscreenElement ? <FaCompress size={14} /> : <FaExpand size={14} />}
+                {isFullScreen ? <FaCompress size={14} /> : <FaExpand size={14} />}
+              </button>
+            </div>
+            <div className="flex items-center w-full justify-between mt-1">
+              <input
+                type="text"
+                value={currentUrl}
+                readOnly
+                className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
+              />
+              <button
+                onClick={shareVideo}
+                className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
+              >
+                <FaShareAlt className="mr-1" size={12} />
+                Share
               </button>
             </div>
           </div>
-          <div className="absolute top-2 left-2 text-white bg-purple-800 bg-opacity-50 px-2 py-1 rounded text-xs">
+          <div className="absolute top-2 left-2 text-white text-xs p-1 bg-purple-800 rounded">
             <span>Vidify</span>
           </div>
         </div>
