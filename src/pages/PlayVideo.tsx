@@ -1,10 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactPlayer from 'react-player';
 
 interface VideoData {
   video_id: number;
   video_url: string;
   title: string;
+  description?: string; // Tambahan untuk deskripsi
+  duration?: string; // Tambahan untuk durasi
 }
 
 export function PlayVideo() {
@@ -12,12 +15,11 @@ export function PlayVideo() {
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isBuffering, setIsBuffering] = useState<boolean>(false);
   const hasAddedImpression = useRef<boolean>(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [userIp, setUserIp] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-  // Fetch user IP
+  // Fungsi untuk mengambil alamat IP dari API
   const fetchUserIp = async () => {
     try {
       const response = await fetch('https://api.ipify.org?format=json');
@@ -29,7 +31,7 @@ export function PlayVideo() {
     }
   };
 
-  // Add impression
+  // Fungsi untuk menambahkan impression
   const addImpression = async (type: 'play' | 'full_screen') => {
     if (hasAddedImpression.current || !videoData?.video_id || !userIp) return;
 
@@ -55,7 +57,6 @@ export function PlayVideo() {
     addImpression('full_screen');
   };
 
-  // Fetch video data
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
@@ -77,76 +78,32 @@ export function PlayVideo() {
     fetchUserIp();
   }, [id]);
 
-  // Video event listeners
   useEffect(() => {
-    if (videoRef.current) {
-      const videoElement = videoRef.current;
+    const handleFullScreenChange = () => {
+      if (document.fullscreenElement) {
+        recordFullScreen();
+      }
+    };
 
-      const handlePlay = () => {
-        addImpression('play');
-        setIsBuffering(false);
-      };
+    document.addEventListener('fullscreenchange', handleFullScreenChange);
 
-      const handleWaiting = () => {
-        setIsBuffering(true);
-      };
-
-      const handleCanPlay = () => {
-        setIsBuffering(false);
-      };
-
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === 'visible' && videoElement && !videoElement.paused) {
-          addImpression('play');
-        }
-      };
-
-      const handleContextMenu = (e: Event) => {
-        e.preventDefault();
-      };
-
-      const handleFullScreenChange = () => {
-        if (document.fullscreenElement === videoElement) {
-          recordFullScreen();
-        }
-      };
-
-      const handleError = () => {
-        setError('Gagal memutar video. Silakan coba lagi.');
-      };
-
-      videoElement.addEventListener('play', handlePlay);
-      videoElement.addEventListener('waiting', handleWaiting);
-      videoElement.addEventListener('canplay', handleCanPlay);
-      videoElement.addEventListener('contextmenu', handleContextMenu);
-      videoElement.addEventListener('error', handleError);
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      document.addEventListener('fullscreenchange', handleFullScreenChange);
-
-      return () => {
-        videoElement.removeEventListener('play', handlePlay);
-        videoElement.removeEventListener('waiting', handleWaiting);
-        videoElement.removeEventListener('canplay', handleCanPlay);
-        videoElement.removeEventListener('contextmenu', handleContextMenu);
-        videoElement.removeEventListener('error', handleError);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        document.removeEventListener('fullscreenchange', handleFullScreenChange);
-      };
-    }
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
   }, [videoData, userIp]);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
-        <p className="text-white ml-4">Memuat video...</p>
+        <p className="text-white ml-4 text-lg">Memuat video...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen bg-gray-900 text-center">
+      <div className="flex flex-col justify-center items-center h-screen text-center bg-gray-900">
         <svg
           className="w-16 h-16 text-red-500 mb-4"
           fill="none"
@@ -164,7 +121,7 @@ export function PlayVideo() {
         <p className="text-red-500 text-lg">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+          className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
         >
           Coba Lagi
         </button>
@@ -173,28 +130,60 @@ export function PlayVideo() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center px-4 py-8">
-      <h1 className="text-3xl font-semibold mb-6 text-center text-white break-words max-w-4xl">
-        {videoData?.title}
-      </h1>
-
-      <div className="relative w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl border border-gray-700 transition-all hover:shadow-3xl">
-        {isBuffering && (
-          <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-blue-500"></div>
-          </div>
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
+      {/* Header */}
+      <header className="w-full max-w-6xl px-4 py-6">
+        <h1 className="text-4xl font-bold mb-2 text-center break-words">{videoData?.title}</h1>
+        {videoData?.description && (
+          <p className="text-gray-400 text-center mb-4">{videoData.description}</p>
         )}
-        <video
-          ref={videoRef}
-          src={videoData?.video_url}
-          controls
-          controlsList="nodownload"
-          className="w-full h-auto aspect-video object-cover custom-video-player"
-          preload="metadata"
-          onContextMenu={(e) => e.preventDefault()}
-        >
-          Browser Anda tidak mendukung tag video.
-        </video>
+        {videoData?.duration && (
+          <p className="text-gray-500 text-sm text-center">Durasi: {videoData.duration}</p>
+        )}
+      </header>
+
+      {/* Video Player */}
+      <div className="w-full max-w-6xl px-4">
+        <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-700 transition-all hover:shadow-3xl">
+          <ReactPlayer
+            url={videoData?.video_url}
+            width="100%"
+            height="100%"
+            playing={isPlaying}
+            controls={true}
+            onPlay={() => {
+              setIsPlaying(true);
+              addImpression('play');
+            }}
+            onPause={() => setIsPlaying(false)}
+            config={{
+              file: {
+                attributes: {
+                  controlsList: 'nodownload',
+                  onContextMenu: (e: React.MouseEvent<HTMLVideoElement>) => e.preventDefault(),
+                  preload: 'metadata',
+                },
+              },
+            }}
+            className="aspect-video"
+          />
+        </div>
+      </div>
+
+      {/* Additional Controls or Info */}
+      <div className="w-full max-w-6xl px-4 mt-6">
+        <div className="flex justify-between items-center text-gray-400">
+          <button
+            onClick={() => window.history.back()}
+            className="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-all"
+          >
+            Kembali
+          </button>
+          <div className="text-sm">
+            <span>Share: </span>
+            <button className="ml-2 text-blue-500 hover:underline">Copy Link</button>
+          </div>
+        </div>
       </div>
     </div>
   );
