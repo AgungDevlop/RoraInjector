@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaStepBackward, FaStepForward } from 'react-icons/fa';
 
 interface VideoData {
   video_id: number;
@@ -189,49 +189,45 @@ export function PlayVideo() {
               },
             }}
             className="aspect-video"
+            style={{ marginBottom: '20px' }} // adjust as needed to move video source up
           />
 
-          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex flex-col items-center text-white">
-            <div className="flex space-x-4 mb-2">
-              <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
-                {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} />}
-              </button>
+          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex items-center text-white">
+            <div className="flex items-center space-x-2">
               <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
-                {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
+                {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
               </button>
-              <input 
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                value={isMuted ? 0 : volume}
-                onChange={(e) => {
-                  setVolume(parseFloat(e.target.value));
-                  setIsMuted(parseFloat(e.target.value) === 0);
-                }}
-                className="w-16 accent-purple-500"
-              />
+              <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
+                {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
+              </button>
+              <button className="hover:text-purple-300 transition-all">
+                <FaStepBackward size={14} />
+              </button>
+              <button className="hover:text-purple-300 transition-all">
+                <FaStepForward size={14} />
+              </button>
               <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all">
-                <FaExpand size={18} />
-              </button>
-            </div>
-            <div className="flex items-center w-full justify-between">
-              <input
-                type="text"
-                value={currentUrl}
-                readOnly
-                className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
-              />
-              <button
-                onClick={shareVideo}
-                className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
-              >
-                <FaShareAlt className="mr-1" size={14} />
-                Share
+                <FaExpand size={14} />
               </button>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="w-full max-w-6xl px-4 mt-2 flex justify-center items-center">
+        <input
+          type="text"
+          value={currentUrl}
+          readOnly
+          className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
+        />
+        <button
+          onClick={shareVideo}
+          className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
+        >
+          <FaShareAlt className="mr-1" size={12} />
+          Share
+        </button>
       </div>
     </div>
   );
