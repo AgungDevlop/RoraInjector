@@ -1,7 +1,7 @@
 const PrivacyPolicy = () => (
   <div className="container mx-auto p-4 text-white pb-20">
     <h1 className="text-3xl font-bold mb-4">Kebijakan Privasi</h1>
-    <p>Kami di VideoID Host menghargai privasi Anda dan berusaha untuk melindungi informasi pribadi Anda. Berikut adalah kebijakan kami:</p>
+    <p>Kami di Vidify Host menghargai privasi Anda dan berusaha untuk melindungi informasi pribadi Anda. Berikut adalah kebijakan kami:</p>
 
     <h2 className="text-2xl font-bold mt-6 mb-4">Informasi yang Dikumpulkan</h2>
     <ul className="list-disc pl-5">

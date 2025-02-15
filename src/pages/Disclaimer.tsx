@@ -2,7 +2,7 @@ const Disclaimer = () => (
   <div className="container mx-auto p-4 text-white pb-20">
     <h1 className="text-3xl font-bold mb-4">Disclaimer</h1>
     
-    <p>VideoID Host berusaha memberikan layanan terbaik, namun:</p>
+    <p>Vidify Host berusaha memberikan layanan terbaik, namun:</p>
     <ul className="list-disc pl-5 mb-4">
       <li>Kami tidak bertanggung jawab atas akurasi atau kebenaran konten yang diunggah oleh pengguna.</li>
       <li>Pendapatan dari video dapat berfluktuasi dan tidak dijamin.</li>

@@ -3,7 +3,7 @@ const TermsAndConditions = () => (
     <h1 className="text-3xl font-bold mb-4">Syarat dan Ketentuan</h1>
     
     <h2 className="text-2xl font-bold mt-6 mb-4">Penggunaan Layanan</h2>
-    <p>Dengan menggunakan VideoID Host, Anda setuju dengan syarat dan ketentuan ini:</p>
+    <p>Dengan menggunakan Vidify Host, Anda setuju dengan syarat dan ketentuan ini:</p>
     <ul className="list-disc pl-5 mb-4">
       <li>Anda harus berusia minimal 18 tahun untuk menggunakan layanan ini.</li>
       <li>Anda bertanggung jawab atas semua konten yang Anda unggah.</li>
