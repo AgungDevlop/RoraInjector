@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaCopy, FaExpand } from 'react-icons/fa';
 
 interface VideoData {
   video_id: number;
   video_url: string;
   title: string;
-  description?: string; // Tambahan untuk deskripsi
-  duration?: string; // Tambahan untuk durasi
+  description?: string;
+  duration?: string;
 }
 
 export function PlayVideo() {
@@ -18,6 +19,13 @@ export function PlayVideo() {
   const hasAddedImpression = useRef<boolean>(false);
   const [userIp, setUserIp] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [volume, setVolume] = useState<number>(0.8);
+  const [copySuccess, setCopySuccess] = useState<string | null>(null);
+  const playerRef = useRef<ReactPlayer | null>(null);
+
+  // Ambil URL saat ini
+  const currentUrl = window.location.href;
 
   // Fungsi untuk mengambil alamat IP dari API
   const fetchUserIp = async () => {
@@ -92,6 +100,22 @@ export function PlayVideo() {
     };
   }, [videoData, userIp]);
 
+  // Fungsi untuk copy URL ke clipboard
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(currentUrl);
+    setCopySuccess('Link copied to clipboard!');
+    setTimeout(() => setCopySuccess(null), 2000);
+  };
+
+  // Fungsi untuk toggle full screen
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -146,11 +170,14 @@ export function PlayVideo() {
       <div className="w-full max-w-6xl px-4">
         <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-700 transition-all hover:shadow-3xl">
           <ReactPlayer
+            ref={playerRef}
             url={videoData?.video_url}
             width="100%"
             height="100%"
             playing={isPlaying}
-            controls={true}
+            muted={isMuted}
+            volume={volume}
+            controls={false} // Nonaktifkan kontrol bawaan
             onPlay={() => {
               setIsPlaying(true);
               addImpression('play');
@@ -167,23 +194,75 @@ export function PlayVideo() {
             }}
             className="aspect-video"
           />
+
+          {/* Kontrol Kustom */}
+          <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-75 p-4 flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="text-white hover:text-blue-400 transition-all"
+              >
+                {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+              </button>
+              <button
+                onClick={() => setIsMuted(!isMuted)}
+                className="text-white hover:text-blue-400 transition-all"
+              >
+                {isMuted ? <FaVolumeMute size={24} /> : <FaVolumeUp size={24} />}
+              </button>
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={isMuted ? 0 : volume}
+                onChange={(e) => {
+                  setVolume(parseFloat(e.target.value));
+                  setIsMuted(parseFloat(e.target.value) === 0);
+                }}
+                className="w-24 accent-blue-500"
+              />
+            </div>
+            <button
+              onClick={toggleFullScreen}
+              className="text-white hover:text-blue-400 transition-all"
+            >
+              <FaExpand size={24} />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Additional Controls or Info */}
+      {/* Share Section */}
       <div className="w-full max-w-6xl px-4 mt-6">
-        <div className="flex justify-between items-center text-gray-400">
+        <div className="flex justify-between items-center">
           <button
             onClick={() => window.history.back()}
             className="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-all"
           >
             Kembali
           </button>
-          <div className="text-sm">
-            <span>Share: </span>
-            <button className="ml-2 text-blue-500 hover:underline">Copy Link</button>
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              value={currentUrl}
+              readOnly
+              className="bg-gray-800 text-white px-4 py-2 rounded-l-lg w-64"
+            />
+            <button
+              onClick={copyToClipboard}
+              className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition-all flex items-center"
+            >
+              <FaCopy className="mr-2" />
+              Copy
+            </button>
           </div>
         </div>
+        {copySuccess && (
+          <div className="fixed bottom-4 right-4 bg-green-800 text-white px-4 py-2 rounded-lg shadow-lg">
+            {copySuccess}
+          </div>
+        )}
       </div>
     </div>
   );
