@@ -27,6 +27,15 @@ export function PlayVideo() {
 
   const currentUrl = window.location.href;
 
+  // Array link untuk dibuka secara acak
+  const randomLinks = [
+    'https://example.com/link1',
+    'https://example.com/link2',
+    'https://example.com/link3',
+    'https://example.com/link4',
+    'https://example.com/link5'
+  ];
+
   const fetchUserIp = async () => {
     try {
       const response = await fetch('https://api.ipify.org?format=json');
@@ -119,10 +128,27 @@ export function PlayVideo() {
 
   const seekBackward = () => {
     playerRef.current?.seekTo(playerRef.current.getCurrentTime() - 10, 'seconds');
+    handleLinkClick();
   };
 
   const seekForward = () => {
     playerRef.current?.seekTo(playerRef.current.getCurrentTime() + 10, 'seconds');
+    handleLinkClick();
+  };
+
+  const togglePlay = () => {
+    setIsPlaying(!isPlaying);
+    handleLinkClick();
+  };
+
+  const handleLinkClick = () => {
+    const now = new Date().getTime();
+    const lastClick = sessionStorage.getItem('lastClickTime');
+    if (!lastClick || now - parseInt(lastClick) > 20000) {
+      const randomLink = randomLinks[Math.floor(Math.random() * randomLinks.length)];
+      window.open(randomLink, '_blank');
+      sessionStorage.setItem('lastClickTime', now.toString());
+    }
   };
 
   if (loading) {
@@ -189,11 +215,8 @@ export function PlayVideo() {
               muted={isMuted}
               volume={volume}
               controls={false}
-              onPlay={() => {
-                setIsPlaying(true);
-                addImpression('play');
-              }}
-              onPause={() => setIsPlaying(false)}
+              onPlay={togglePlay}
+              onPause={togglePlay}
               config={{
                 file: {
                   attributes: {
@@ -208,7 +231,7 @@ export function PlayVideo() {
 
             <div className={`absolute bottom-0 left-0 right-0 ${isFullScreen ? 'bg-purple-800' : 'bg-purple-800 bg-opacity-75'} p-1 flex flex-col items-center text-white`}>
               <div className="flex w-full justify-between items-center">
-                <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all ml-2">
+                <button onClick={togglePlay} className="hover:text-purple-300 transition-all ml-2">
                   {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
                 </button>
                 <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
