@@ -192,12 +192,12 @@ export function PlayVideo() {
           />
 
           <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex flex-col items-center text-white">
-            <div className="flex space-x-2 mb-2">
+            <div className="flex space-x-4 mb-2">
               <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
-                {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
+                {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} />}
               </button>
               <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
-                {isMuted ? <FaVolumeMute size={20} /> : <FaVolumeUp size={20} />}
+                {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
               </button>
               <input 
                 type="range"
@@ -212,7 +212,7 @@ export function PlayVideo() {
                 className="w-16 accent-purple-500"
               />
               <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all">
-                <FaExpand size={20} />
+                <FaExpand size={18} />
               </button>
             </div>
             <div className="flex items-center w-full justify-between">
@@ -220,13 +220,13 @@ export function PlayVideo() {
                 type="text"
                 value={currentUrl}
                 readOnly
-                className="bg-gray-800 text-white px-4 py-2 rounded-l-lg w-64"
+                className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
               />
               <button
                 onClick={shareVideo}
-                className="bg-purple-600 text-white px-4 py-2 rounded-r-lg hover:bg-purple-700 transition-all flex items-center"
+                className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
               >
-                <FaShareAlt className="mr-2" />
+                <FaShareAlt className="mr-1" size={14} />
                 Share
               </button>
             </div>
