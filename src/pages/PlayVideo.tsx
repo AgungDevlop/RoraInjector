@@ -22,11 +22,12 @@ export function PlayVideo() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.8);
-  const playerRef = useRef<ReactPlayer>(null);
+  const playerRef = useRef<ReactPlayer | null>(null);
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
   const currentUrl = window.location.href;
 
+  // Array link untuk dibuka secara acak
   const randomLinks = [
     'https://example.com/link1',
     'https://example.com/link2',
@@ -108,15 +109,12 @@ export function PlayVideo() {
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
-      const playerElement = playerRef.current?.getInternalPlayer();
-      if (playerElement) {
-        playerElement.requestFullscreen().catch(err => {
-          console.error('Error attempting to enable full-screen mode:', err);
-        });
-      }
+      playerRef.current?.getInternalPlayer()?.requestFullscreen().then(() => {
+        handleLinkClick(); // Memastikan link dibuka saat masuk ke full screen
+      });
     } else {
-      document.exitFullscreen().catch(err => {
-        console.error('Error attempting to exit full-screen mode:', err);
+      document.exitFullscreen().then(() => {
+        handleLinkClick(); // Memastikan link dibuka saat keluar dari full screen
       });
     }
   };
@@ -144,7 +142,7 @@ export function PlayVideo() {
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
-    handleLinkClick();
+    handleLinkClick(); // Memastikan link dibuka saat play/pause
     if (!isPlaying) {
       addImpression('play');
     }
@@ -224,8 +222,8 @@ export function PlayVideo() {
               muted={isMuted}
               volume={volume}
               controls={false}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
+              onPlay={() => { setIsPlaying(true); handleLinkClick(); }}
+              onPause={() => { setIsPlaying(false); handleLinkClick(); }}
               config={{
                 file: {
                   attributes: {
@@ -238,7 +236,7 @@ export function PlayVideo() {
               className="aspect-video"
             />
 
-            <div className={`absolute bottom-0 left-0 right-0 ${isFullScreen ? 'bg-purple-800' : 'bg-purple-800 bg-opacity-75'} p-1 flex flex-col items-center text-white`}>
+            <div className={`absolute bottom-0 left-0 right-0 z-50 ${isFullScreen ? 'bg-purple-800 opacity-80' : 'bg-purple-800 bg-opacity-75'} p-1 flex flex-col items-center text-white`}>
               <div className="flex w-full justify-between items-center">
                 <button onClick={togglePlay} className="hover:text-purple-300 transition-all ml-2">
                   {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
