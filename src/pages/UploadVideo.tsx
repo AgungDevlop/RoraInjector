@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { FaClipboard } from 'react-icons/fa';
 
-
 const UploadVideo: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -10,6 +9,9 @@ const UploadVideo: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [shortlink, setShortlink] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
+
+  // Batas maksimum ukuran file (100MB dalam byte)
+  const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
   // Function to generate a random shortlink with 10 characters
   const generateShortlink = () => {
@@ -27,10 +29,17 @@ const UploadVideo: React.FC = () => {
     return nameWithoutExtension;
   };
 
-  // Handle file selection
+  // Handle file selection with size validation
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectedFile(event.target.files[0]);
+      const file = event.target.files[0];
+      if (file.size > MAX_FILE_SIZE) {
+        setError('Ukuran file melebihi batas maksimum 100MB.');
+        setSelectedFile(null);
+        return;
+      }
+      setSelectedFile(file);
+      setError(null); // Reset error jika file valid
     }
   };
 
@@ -38,14 +47,22 @@ const UploadVideo: React.FC = () => {
   const copyToClipboard = () => {
     if (shortlink) {
       navigator.clipboard.writeText(shortlink);
-      setCopySuccess('Shortlink copied to clipboard!');
+      setCopySuccess('Shortlink berhasil disalin!');
       setTimeout(() => setCopySuccess(null), 2000);
     }
   };
 
-  // Handle video upload
+  // Handle video upload with size validation
   const handleUpload = () => {
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      setError('Pilih file video terlebih dahulu.');
+      return;
+    }
+
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setError('Ukuran file melebihi batas maksimum 100MB.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -54,7 +71,6 @@ const UploadVideo: React.FC = () => {
     const shortLink = generateShortlink();
     const title = extractTitleFromFileName(selectedFile.name);
 
-    // Retrieve the user_id from localStorage
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     const user_id = user?.user_id;
 
@@ -74,7 +90,6 @@ const UploadVideo: React.FC = () => {
           const videoUrl = `https://cdn.videy.co/${response.id}.mp4`;
           setUploadProgress(null);
 
-          // Now send data to your local Node.js API
           const payload = {
             shortlink: shortLink,
             title: title,
@@ -91,33 +106,31 @@ const UploadVideo: React.FC = () => {
           })
             .then((res) => res.json())
             .then((data) => {
-// Inside the handleUpload function after the fetch call
-if (data.status === 'success') {
-  // Use window.location.host to get the current domain
-  const host = window.location.host;
-  setShortlink(`http://${host}/e/${shortLink}`);
-  setSuccessMessage('Video uploaded successfully!');
-  setTimeout(() => setSuccessMessage(null), 3000);
-} else {
-                setError('Error uploading video');
+              if (data.status === 'success') {
+                const host = window.location.host;
+                setShortlink(`http://${host}/e/${shortLink}`);
+                setSuccessMessage('Video berhasil diunggah!');
+                setTimeout(() => setSuccessMessage(null), 3000);
+              } else {
+                setError('Gagal mengunggah video.');
               }
             })
             .catch((err) => {
-              console.error('Failed to save data:', err);
-              setError('Failed to save data to server');
+              console.error('Gagal menyimpan data:', err);
+              setError('Gagal menyimpan data ke server.');
             });
         } else {
-          setError('Invalid response from server');
+          setError('Respons server tidak valid.');
           setUploadProgress(null);
         }
       } else {
-        setError('Upload failed');
+        setError('Gagal mengunggah video.');
         setUploadProgress(null);
       }
     };
 
     xhr.onerror = () => {
-      setError('Upload failed due to network error');
+      setError('Gagal mengunggah karena masalah jaringan.');
       setUploadProgress(null);
     };
 
@@ -125,8 +138,15 @@ if (data.status === 'success') {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full text-white" 
-         style={{ background: 'radial-gradient(circle at center, #2c003e, #1a0027)' }}>
+    <div
+      className="flex flex-col items-center justify-center w-full text-white"
+      style={{ background: 'radial-gradient(circle at center, #2c003e, #1a0027)' }}
+    >
+      {/* Informasi batas ukuran file */}
+      <p className="text-gray-300 text-sm mb-4">
+        Maksimum ukuran file: 100MB. Format yang didukung: video (MP4, AVI, dll).
+      </p>
+
       {/* File upload UI */}
       <div
         className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-300 w-full ${
@@ -142,18 +162,25 @@ if (data.status === 'success') {
           e.preventDefault();
           setIsDragging(false);
           if (e.dataTransfer.files) {
-            setSelectedFile(e.dataTransfer.files[0]);
+            const file = e.dataTransfer.files[0];
+            if (file.size > MAX_FILE_SIZE) {
+              setError('Ukuran file melebihi batas maksimum 100MB.');
+              setSelectedFile(null);
+              return;
+            }
+            setSelectedFile(file);
+            setError(null);
           }
         }}
         onClick={() => document.getElementById('fileInput')?.click()}
       >
         {selectedFile ? (
           <p className="text-white font-semibold text-lg break-words">
-            File Selected: {selectedFile.name}
+            File Terpilih: {selectedFile.name}
           </p>
         ) : (
           <>
-            <p className="text-white font-semibold text-lg mb-4">Drag and Drop Your Video</p>
+            <p className="text-white font-semibold text-lg mb-4">Seret dan Lepas Video Anda</p>
             <svg
               className="mx-auto w-16 h-16 text-purple-500"
               fill="none"
@@ -193,7 +220,7 @@ if (data.status === 'success') {
         className="mt-4 bg-purple-700 text-white px-4 py-2 w-full rounded-lg transition-all duration-300 hover:bg-purple-800"
         onClick={handleUpload}
       >
-        Upload Video
+        Unggah Video
       </button>
 
       {/* Shortlink Input with Copy Icon */}
