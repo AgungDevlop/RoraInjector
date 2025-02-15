@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const checkAuthentication = async () => {
-      const user = localStorage.getItem("user");
+      const user = sessionStorage.getItem("user");
       if (!user) {
         setIsAuthenticated(false);
         setLoading(false);
@@ -29,7 +29,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
           setIsAuthenticated(true);
         } else {
           // If user does not exist, clear local storage and set authentication to false
-          localStorage.removeItem("user");
+          sessionStorage.removeItem("user");
           setIsAuthenticated(false);
         }
       } catch (error) {

@@ -54,7 +54,7 @@ const UploadVideo: React.FC = () => {
     const title = extractTitleFromFileName(selectedFile.name);
 
     // Retrieve the user_id from localStorage
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     const user_id = user?.user_id;
 
     xhr.upload.addEventListener('progress', (event) => {
@@ -90,11 +90,22 @@ const UploadVideo: React.FC = () => {
           })
             .then((res) => res.json())
             .then((data) => {
+<<<<<<< HEAD
               if (data.status === 'success') {
                 setShortlink(`https://test.doobs.top/e/${shortLink}`);
                 setSuccessMessage('Video uploaded successfully!');
                 setTimeout(() => setSuccessMessage(null), 3000);
               } else {
+=======
+// Inside the handleUpload function after the fetch call
+if (data.status === 'success') {
+  // Use window.location.host to get the current domain
+  const host = window.location.host;
+  setShortlink(`http://${host}/e/${shortLink}`);
+  setSuccessMessage('Video uploaded successfully!');
+  setTimeout(() => setSuccessMessage(null), 3000);
+} else {
+>>>>>>> 0967c7d (feat: routing)
                 setError('Error uploading video');
               }
             })

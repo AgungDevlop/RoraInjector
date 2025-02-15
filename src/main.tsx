@@ -15,6 +15,8 @@ import { Contact } from "./pages/Contact";
 import { PlayVideo } from "./pages/PlayVideo";
 import { Download } from "./pages/Download";
 import Redirect from "./pages/Redirect";
+import EarningsHistory from "./pages/EarningsHistory";
+import WithdrawalHistory from "./pages/WithdrawalHistory"; // Pastikan sudah diimport
 import ProtectedRoute from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 
@@ -93,6 +95,24 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <PaymentMethod />
+          </ProtectedRoute>
+        ),
+        errorElement: ErrorFallback,
+      },
+      {
+        path: "earnings-history",
+        element: (
+          <ProtectedRoute>
+            <EarningsHistory />
+          </ProtectedRoute>
+        ),
+        errorElement: ErrorFallback,
+      },
+      {
+        path: "withdrawal-history",
+        element: (
+          <ProtectedRoute>
+            <WithdrawalHistory />
           </ProtectedRoute>
         ),
         errorElement: ErrorFallback,

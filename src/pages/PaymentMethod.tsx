@@ -21,7 +21,7 @@ const PaymentMethod = () => {
   const navigate = useNavigate();
 
   const fetchPaymentMethods = async () => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
       if (!user.user_id) {
@@ -52,7 +52,7 @@ const PaymentMethod = () => {
   };
 
   const confirmValidation = async () => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     if (!storedUser) return;
     const user = JSON.parse(storedUser);
     const payload = {

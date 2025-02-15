@@ -17,7 +17,7 @@ const Payment = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const storedUser = localStorage.getItem("user");
+        const storedUser = sessionStorage.getItem("user");
         if (!storedUser) {
           throw new Error("User not logged in");
         }
@@ -65,7 +65,7 @@ const Payment = () => {
 
   const confirmWithdrawal = async () => {
     try {
-      const storedUser = localStorage.getItem("user");
+      const storedUser = sessionStorage.getItem("user");
       if (!storedUser) {
         throw new Error("User not logged in");
       }
@@ -176,19 +176,32 @@ const Payment = () => {
       description: "Total saldo yang tersedia untuk pencairan. Minimum pencairan adalah Rp 100.000.",
       bgColor: "bg-blue-500 bg-opacity-10"
     },
-    {
-      icon: <FaCreditCard className="text-green-500" />,
-      title: "Metode Pembayaran",
-      value: paymentMethod ? paymentMethod.payment_method : "Belum Disetel",
-      description: paymentMethod ? (
+{
+  icon: <FaCreditCard className="text-green-500" />,
+  title: "Metode Pembayaran",
+  value: paymentMethod ? paymentMethod.payment_method : "Belum Disetel",
+  description: (
+    <div className="flex flex-col gap-2">
+      {paymentMethod ? (
         <>
           <p><strong>Nama Penerima:</strong> {paymentMethod.receiver_name}</p>
           {paymentMethod.payment_method === 'Bank' && <p><strong>Nama Bank:</strong> {paymentMethod.bank_name}</p>}
           <p><strong>Nomor Akun:</strong> {paymentMethod.account_number}</p>
         </>
-      ) : "Silakan atur metode pembayaran Anda.",
-      bgColor: "bg-green-500 bg-opacity-10"
-    },
+      ) : (
+        <p>Silakan atur metode pembayaran Anda.</p>
+      )}
+      <a href="/payment-method" className="mt-2">
+        <button 
+          className="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors"
+        >
+          Atur Metode Pembayaran
+        </button>
+      </a>
+    </div>
+  ),
+  bgColor: "bg-green-500 bg-opacity-10"
+},
   ];
 
   // Generate cards for multiples of 100 up to 500,000 and one for max amount
@@ -246,29 +259,29 @@ const Payment = () => {
           </div>
         ))}
       </div>
-
 {/* Withdrawal Options - 2 grid 2 columns */}
-<div className="grid grid-cols-2 gap-4 mb-4">
+<div className="grid grid-cols-2 gap-4 mb-4 w-full">
   {withdrawalOptions.map((option, index) => (
     <div 
       key={index} 
       onClick={option.onClick} 
       data-aos="fade-up" 
       data-aos-delay={index * 100}
-      className={`p-4 rounded shadow-md flex flex-col items-start ${option.bgColor || 'bg-gray-800'}`}
+      className={`p-4 rounded shadow-md flex flex-col items-start ${option.bgColor || 'bg-gray-800'} w-full`}
       style={{ cursor: option.onClick ? 'pointer' : 'default' }}
     >
-      <div className="flex items-center mb-2">
-        <div className="text-3xl mr-4">{option.icon}</div>
-        <div>
-          <h3 className="text-base font-semibold">{option.title}</h3> {/* Changed from text-xl to text-base */}
-          <p className="text-sm">{option.value}</p> {/* Changed from text-lg to text-sm */}
+      <div className="flex items-center mb-2 w-full">
+        <div className="text-3xl mr-4 flex-shrink-0">{option.icon}</div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold break-words">{option.title}</h3> {/* Changed from text-base to text-sm */}
+          <p className="text-sm break-words">{option.value}</p>
         </div>
       </div>
-      {option.description && <p className="text-xs text-gray-400">{option.description}</p>} {/* Changed from text-sm to text-xs */}
+      {option.description && <p className="text-xs text-gray-400 break-words">{option.description}</p>}
     </div>
   ))}
 </div>
+
 
       {requestError && <p className="text-red-500 text-center">{requestError}</p>}
       {error && <p className="text-red-500 text-center">{error}</p>}

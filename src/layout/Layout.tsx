@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FaHome, FaArrowLeft, FaArrowRight, FaChartLine, FaPiggyBank, FaUserCircle, FaChevronDown, FaChevronUp, FaUpload } from 'react-icons/fa';
+import { FaHome, FaArrowLeft, FaArrowRight, FaHistory, FaPiggyBank, FaUserCircle, FaChevronDown, FaChevronUp, FaUpload } from 'react-icons/fa';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import OpenGraph from '../components/OpenGraph';
 
@@ -12,7 +12,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsLoggedIn(true);
@@ -39,7 +39,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [dropdownOpen]);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     setIsLoggedIn(false);
     setDropdownOpen(false);
     navigate('/login');
@@ -52,6 +52,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   // New function for navigating to payment
   const goToPayment = () => navigate('/payment');
+  const goToHistory = () => navigate('/withdrawal-history');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -126,9 +127,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <FaArrowRight className="text-2xl" />
             <span className="text-xs">Next</span>
           </button>
-          <button className="flex flex-col items-center text-white">
-            <FaChartLine className="text-2xl" />
-            <span className="text-xs">Analytics</span>
+          <button onClick={goToHistory} className="flex flex-col items-center text-white">
+            <FaHistory className="text-2xl" />
+            <span className="text-xs">History</span>
           </button>
           <button onClick={goToPayment} className="flex flex-col items-center text-white">
             <FaPiggyBank className="text-2xl" />

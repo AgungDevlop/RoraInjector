@@ -58,5 +58,17 @@
     "description": "Unduh video yang Anda butuhkan.",
     "image": "https://cdn-icons-png.flaticon.com/512/9205/9205302.png",
     "url": "https://doobs.my.id"
+  },
+  "/earnings-history": {
+    "title": "VideoID Host - Riwayat Penghasilan",
+    "description": "Lihat riwayat penghasilan Anda di platform ini.",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_QxlASVFI6K7xj9XzfRiH-Xlk67nlgPF_rzCBNtZ0vXdt998tNyBnU_U&s=10",
+    "url": "https://doobs.my.id"
+  },
+  "/withdrawal-history": {
+    "title": "VideoID Host - Riwayat Penarikan",
+    "description": "Cek riwayat penarikan dana Anda.",
+    "image": "https://cdn-icons-png.flaticon.com/512/5582/5582334.png",
+    "url": "https://doobs.my.id"
   }
 }
