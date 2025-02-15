@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaFastBackward, FaFastForward } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaFastBackward, FaFastForward, FaCompress } from 'react-icons/fa';
 
 interface VideoData {
   video_id: number;
@@ -228,26 +228,11 @@ export function PlayVideo() {
                 </button>
               </div>
               <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all mr-2">
-                <FaExpand size={14} />
-              </button>
-            </div>
-            <div className="flex items-center w-full justify-between mt-1">
-              <input
-                type="text"
-                value={currentUrl}
-                readOnly
-                className="bg-gray-800 text-white px-2 py-1 rounded-l-lg w-48 text-xs"
-              />
-              <button
-                onClick={shareVideo}
-                className="bg-purple-600 text-white px-2 py-1 rounded-r-lg hover:bg-purple-700 transition-all flex items-center text-xs"
-              >
-                <FaShareAlt className="mr-1" size={12} />
-                Share
+                {document.fullscreenElement ? <FaCompress size={14} /> : <FaExpand size={14} />}
               </button>
             </div>
           </div>
-          <div className="absolute top-2 left-2 text-white text-xs opacity-50">
+          <div className="absolute top-2 left-2 text-white bg-purple-800 bg-opacity-50 px-2 py-1 rounded text-xs">
             <span>Vidify</span>
           </div>
         </div>
