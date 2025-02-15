@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaStepBackward, FaStepForward, FaShareAlt } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaFastBackward, FaFastForward } from 'react-icons/fa';
 
 interface VideoData {
   video_id: number;
@@ -61,20 +61,6 @@ export function PlayVideo() {
     addImpression('full_screen');
   };
 
-  const seekBackward = () => {
-    if (playerRef.current) {
-      const currentTime = playerRef.current.getCurrentTime();
-      playerRef.current.seekTo(Math.max(currentTime - 10, 0));
-    }
-  };
-
-  const seekForward = () => {
-    if (playerRef.current) {
-      const currentTime = playerRef.current.getCurrentTime();
-      playerRef.current.seekTo(currentTime + 10);
-    }
-  };
-
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
@@ -126,6 +112,14 @@ export function PlayVideo() {
     } else {
       alert('Share not supported on this browser. Copy the link manually.');
     }
+  };
+
+  const seekBackward = () => {
+    playerRef.current?.seekTo(playerRef.current.getCurrentTime() - 10, 'seconds');
+  };
+
+  const seekForward = () => {
+    playerRef.current?.seekTo(playerRef.current.getCurrentTime() + 10, 'seconds');
   };
 
   if (loading) {
@@ -203,29 +197,38 @@ export function PlayVideo() {
               },
             }}
             className="aspect-video"
-            style={{ marginTop: '10px' }}
           />
 
-          <div className="watermark absolute top-2 left-2 text-sm text-white opacity-70">
-            Vidify
-          </div>
-
-          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex flex-col items-center text-white">
-            <div className="flex justify-between items-center w-full">
-              <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
+          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-1 flex flex-col items-center text-white">
+            <div className="flex w-full justify-between items-center">
+              <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all ml-2">
                 {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
               </button>
-              <button onClick={seekBackward} className="hover:text-purple-300 transition-all">
-                <FaStepBackward size={16} />
-              </button>
-              <button onClick={seekForward} className="hover:text-purple-300 transition-all">
-                <FaStepForward size={16} />
-              </button>
               <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
-                {isMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
+                {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
               </button>
-              <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all">
-                <FaExpand size={16} />
+              <input 
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={isMuted ? 0 : volume}
+                onChange={(e) => {
+                  setVolume(parseFloat(e.target.value));
+                  setIsMuted(parseFloat(e.target.value) === 0);
+                }}
+                className="w-20 accent-purple-500"
+              />
+              <div className="flex items-center space-x-2 mr-2">
+                <button onClick={seekBackward} className="hover:text-purple-300 transition-all">
+                  <FaFastBackward size={14} />
+                </button>
+                <button onClick={seekForward} className="hover:text-purple-300 transition-all">
+                  <FaFastForward size={14} />
+                </button>
+              </div>
+              <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all mr-2">
+                <FaExpand size={14} />
               </button>
             </div>
             <div className="flex items-center w-full justify-between mt-1">
@@ -243,6 +246,9 @@ export function PlayVideo() {
                 Share
               </button>
             </div>
+          </div>
+          <div className="absolute top-2 left-2 text-white text-xs opacity-50">
+            <span>Vidify</span>
           </div>
         </div>
       </div>
