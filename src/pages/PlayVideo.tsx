@@ -191,46 +191,47 @@ export function PlayVideo() {
             className="aspect-video"
           />
 
-          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex justify-center items-center space-x-2 text-white">
-            <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
-              {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
-            </button>
-            <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
-              {isMuted ? <FaVolumeMute size={20} /> : <FaVolumeUp size={20} />}
-            </button>
-            <input 
-              type="range"
-              min={0}
-              max={1}
-              step={0.01}
-              value={isMuted ? 0 : volume}
-              onChange={(e) => {
-                setVolume(parseFloat(e.target.value));
-                setIsMuted(parseFloat(e.target.value) === 0);
-              }}
-              className="w-16 accent-purple-500"
-            />
-            <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all">
-              <FaExpand size={20} />
-            </button>
+          <div className="absolute bottom-0 left-0 right-0 bg-purple-800 bg-opacity-75 p-2 flex flex-col items-center text-white">
+            <div className="flex space-x-2 mb-2">
+              <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-purple-300 transition-all">
+                {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
+              </button>
+              <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
+                {isMuted ? <FaVolumeMute size={20} /> : <FaVolumeUp size={20} />}
+              </button>
+              <input 
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={isMuted ? 0 : volume}
+                onChange={(e) => {
+                  setVolume(parseFloat(e.target.value));
+                  setIsMuted(parseFloat(e.target.value) === 0);
+                }}
+                className="w-16 accent-purple-500"
+              />
+              <button onClick={toggleFullScreen} className="hover:text-purple-300 transition-all">
+                <FaExpand size={20} />
+              </button>
+            </div>
+            <div className="flex items-center w-full justify-between">
+              <input
+                type="text"
+                value={currentUrl}
+                readOnly
+                className="bg-gray-800 text-white px-4 py-2 rounded-l-lg w-64"
+              />
+              <button
+                onClick={shareVideo}
+                className="bg-purple-600 text-white px-4 py-2 rounded-r-lg hover:bg-purple-700 transition-all flex items-center"
+              >
+                <FaShareAlt className="mr-2" />
+                Share
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="w-full max-w-6xl px-4 mt-6 flex justify-end items-center">
-        <input
-          type="text"
-          value={currentUrl}
-          readOnly
-          className="bg-gray-800 text-white px-4 py-2 rounded-l-lg w-64"
-        />
-        <button
-          onClick={shareVideo}
-          className="bg-purple-600 text-white px-4 py-2 rounded-r-lg hover:bg-purple-700 transition-all flex items-center"
-        >
-          <FaShareAlt className="mr-2" />
-          Share
-        </button>
       </div>
     </div>
   );
