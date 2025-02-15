@@ -113,7 +113,6 @@ export function PlayVideo() {
     } else {
       document.exitFullscreen();
     }
-    handleLinkClick();
   };
 
   const shareVideo = () => {
@@ -140,6 +139,9 @@ export function PlayVideo() {
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
     handleLinkClick();
+    if (!isPlaying) {
+      addImpression('play');
+    }
   };
 
   const handleLinkClick = () => {
@@ -216,8 +218,8 @@ export function PlayVideo() {
               muted={isMuted}
               volume={volume}
               controls={false}
-              onPlay={() => setIsPlaying(true)} // Hanya mengupdate state, tidak memanggil handleLinkClick
-              onPause={() => setIsPlaying(false)} // Hanya mengupdate state, tidak memanggil handleLinkClick
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
               config={{
                 file: {
                   attributes: {
