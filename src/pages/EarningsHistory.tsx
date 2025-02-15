@@ -4,7 +4,6 @@ import { FaCalendarAlt, FaSearch } from "react-icons/fa";
 
 const EarningsHistory: React.FC = () => {
   const [user, setUser] = useState<any>(null);
-  const [earningsData, setEarningsData] = useState<any[]>([]);
   const [displayedData, setDisplayedData] = useState<any[]>([]); // Data yang ditampilkan (default 10 baris)
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +32,6 @@ const EarningsHistory: React.FC = () => {
         url += `&start_date=${start}&end_date=${end}`;
       }
       const response = await axios.get(url);
-      setEarningsData(response.data);
       setDisplayedData(response.data.slice(0, 10)); // Ambil 10 baris pertama secara default
     } catch (err) {
       setError("Gagal mengambil data riwayat penghasilan. Silakan coba lagi nanti.");
