@@ -22,12 +22,11 @@ export function PlayVideo() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.8);
-  const playerRef = useRef<ReactPlayer | null>(null);
+  const playerRef = useRef<ReactPlayer>(null);
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
   const currentUrl = window.location.href;
 
-  // Array link untuk dibuka secara acak
   const randomLinks = [
     'https://example.com/link1',
     'https://example.com/link2',
@@ -109,9 +108,16 @@ export function PlayVideo() {
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
-      playerRef.current?.getInternalPlayer()?.requestFullscreen();
+      const playerElement = playerRef.current?.getInternalPlayer();
+      if (playerElement) {
+        playerElement.requestFullscreen().catch(err => {
+          console.error('Error attempting to enable full-screen mode:', err);
+        });
+      }
     } else {
-      document.exitFullscreen();
+      document.exitFullscreen().catch(err => {
+        console.error('Error attempting to exit full-screen mode:', err);
+      });
     }
   };
 
