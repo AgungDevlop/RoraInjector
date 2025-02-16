@@ -29,11 +29,9 @@ export function PlayVideo() {
 
   // Array link untuk dibuka secara acak
   const randomLinks = [
-    'https://example.com/link1',
-    'https://example.com/link2',
-    'https://example.com/link3',
-    'https://example.com/link4',
-    'https://example.com/link5'
+  'https://aucmoartoas.com/4/8948209',
+  'https://pk.octodekipper.com/iM9Z1gV287dBKeO/94691',
+  'https://likelyguy.com/b.3zVg0IPW3-pmv/b/mpVCJNZTDI0m2gMMDAcn2wMozOAxx/LBTuYAwzNrzkYIzLMQDJIk
   ];
 
   const fetchUserIp = async () => {
