@@ -4,7 +4,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import { PlayVideo } from "./pages/PlayVideo";
 import ErrorBoundary from "./components/ErrorBoundary";
-import * as React from "react";
 import "./index.css";
 
 
