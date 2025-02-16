@@ -108,7 +108,7 @@ const UploadVideo: React.FC = () => {
             .then((data) => {
               if (data.status === 'success') {
                 const host = window.location.host;
-                setShortlink(`http://${host}/e/${shortLink}`);
+                setShortlink(`https://${host}/e/${shortLink}`);
                 setSuccessMessage('Video berhasil diunggah!');
                 setTimeout(() => setSuccessMessage(null), 3000);
               } else {
