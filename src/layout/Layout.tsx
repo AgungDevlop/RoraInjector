@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FaHome, FaArrowLeft, FaArrowRight, FaHistory, FaPiggyBank, FaUserCircle, FaChevronDown, FaChevronUp, FaUpload } from 'react-icons/fa';
+import { FaHome, FaArrowLeft, FaArrowRight, FaHistory, FaPiggyBank, FaUserCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import OpenGraph from '../components/OpenGraph';
 
@@ -59,15 +59,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <header className="fixed top-0 left-0 w-full p-4 text-white flex items-center justify-between z-50" 
               style={{ background: 'radial-gradient(circle at top right, #4b0082, #1c002c)' }}>
         <div className="flex items-center">
-          <FaUpload className="mr-2 text-xl" />
           <h1 className="text-2xl font-bold">Vidify Host</h1>
         </div>
         <div className="flex items-center">
           <button 
             onClick={() => navigate('/dashboard')} 
-            className="mr-2 text-xl focus:outline-none"
+            className="mr-2 bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded focus:outline-none"
           >
-            <FaUpload />
+            Upload
           </button>
           {isLoggedIn && user && (
             <div className="relative" ref={dropdownRef}>
