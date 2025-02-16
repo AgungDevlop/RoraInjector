@@ -4,7 +4,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import { PlayVideo } from "./pages/PlayVideo";
 import ErrorBoundary from "./components/ErrorBoundary";
-import Layout from "./layout/Layout"; // Assuming this is needed for the App component
 
 const ErrorFallback = (
   <div className="text-center text-red-500 p-4">
