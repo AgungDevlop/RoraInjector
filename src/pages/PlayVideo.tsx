@@ -105,7 +105,7 @@ export function PlayVideo() {
     };
   }, [videoData, userIp]);
 
-  useEffect(() => {
+useEffect(() => {
     // Memasukkan script iklan ke dalam DOM
     const script = document.createElement('script');
     script.src = `https://ptichoolsougn.net/401/8948070`;
@@ -113,9 +113,15 @@ export function PlayVideo() {
 
     document.body.appendChild(script);
 
+    // Menambahkan script baru di sini
+    const newScript = document.createElement('script');
+    newScript.innerHTML = `(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://naupsithizeekee.com/tag.min.js',8948243,document.body||document.documentElement)`;
+    document.body.appendChild(newScript);
+
     // Cleanup function untuk menghapus script saat komponen unmount
     return () => {
       document.body.removeChild(script);
+      document.body.removeChild(newScript);
     };
   }, []);
 
