@@ -28,11 +28,5 @@ export default defineConfig({
   base: "/",
   build: {
     sourcemap: false,
-    rollupOptions: {
-      input: {
-        main: './src/main.tsx', // Assuming main.tsx is your entry for other parts of the app
-        play: './src/play.tsx', // New entry point for video player
-      }
-    }
   },
 });
