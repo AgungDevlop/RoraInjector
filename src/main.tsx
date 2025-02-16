@@ -12,7 +12,6 @@ import Payment from "./pages/Payment";
 import Profile from "./pages/Profile";
 import PaymentMethod from "./pages/PaymentMethod";
 import { Contact } from "./pages/Contact";
-import { PlayVideo } from "./pages/PlayVideo";
 import { Download } from "./pages/Download";
 import Redirect from "./pages/Redirect";
 import EarningsHistory from "./pages/EarningsHistory";
@@ -119,16 +118,6 @@ const router = createBrowserRouter([
             <WithdrawalHistory />
           </ProtectedRoute>
         ),
-        errorElement: ErrorFallback,
-      },
-      {
-        path: ":id",
-        element: <PlayVideo />,
-        errorElement: ErrorFallback,
-      },
-      {
-        path: "e/:id",
-        element: <PlayVideo />,
         errorElement: ErrorFallback,
       },
       {
