@@ -59,7 +59,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <header className="fixed top-0 left-0 w-full p-4 text-white flex items-center justify-between z-50" 
               style={{ background: 'radial-gradient(circle at top right, #4b0082, #1c002c)' }}>
         <div className="flex items-center">
-          <FaUpload className="mr-2 text-xl" />
+          <Link to="/dashboard">
+            <FaUpload className="mr-2 text-xl cursor-pointer" />
+          </Link>
           <h1 className="text-2xl font-bold">Vidify Host</h1>
         </div>
         {isLoggedIn && user && (
