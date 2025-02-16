@@ -246,14 +246,14 @@ const Home = () => {
           <div className="text-left">
             <h4 className="text-base font-bold mb-3">Vidify</h4>
             <p className="mb-2">
-              <span className="font-semibold">Developer:</span> Agung Developer
+              <span className="font-semibold">Developer:</span> Vidify Boses
             </p>
             <p className="mb-2">
-              <span className="font-semibold">Company:</span> Bali
+              <span className="font-semibold">Company:</span> Vidify Indonesia
             </p>
             <p className="mb-2">
               <span className="font-semibold">Email:</span> 
-              <a href="mailto:support@agungwandev.com" className="text-purple-500 hover:text-purple-600 break-words">support@agungwandev.com</a>
+              <a href="mailto:support@vidify.link" className="text-purple-500 hover:text-purple-600 break-words">support@vidify.link</a>
             </p>
           </div>
           <div className="text-left">
