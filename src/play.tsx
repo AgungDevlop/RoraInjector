@@ -1,9 +1,10 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import App from "./App";
 import { PlayVideo } from "./pages/PlayVideo";
-import Layout from "./Layout"; // Adjust this import path as per your project structure
 import ErrorBoundary from "./components/ErrorBoundary";
+import Layout from "./layout/Layout"; // Assuming this is needed for the App component
 
 const ErrorFallback = (
   <div className="text-center text-red-500 p-4">
@@ -21,7 +22,7 @@ const ErrorFallback = (
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, // Wrapping routes with Layout
+    element: <App />, // Wrapping PlayVideo routes with App
     errorElement: ErrorFallback,
     children: [
       {
