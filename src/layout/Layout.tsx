@@ -59,50 +59,57 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <header className="fixed top-0 left-0 w-full p-4 text-white flex items-center justify-between z-50" 
               style={{ background: 'radial-gradient(circle at top right, #4b0082, #1c002c)' }}>
         <div className="flex items-center">
-          <Link to="/dashboard">
-            <FaUpload className="mr-2 text-xl cursor-pointer" />
-          </Link>
           <h1 className="text-2xl font-bold">Vidify Host</h1>
         </div>
-        {isLoggedIn && user && (
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex flex-col items-center focus:outline-none"
-            >
-              <FaUserCircle className="text-white text-xl" />
-              {dropdownOpen ? (
-                <FaChevronUp className="text-white mt-1 text-xs" />
-              ) : (
-                <FaChevronDown className="text-white mt-1 text-xs" />
+        <div className="flex items-center">
+          {isLoggedIn && (
+            <Link to="/dashboard">
+              <button className="mr-4 px-4 py-2 rounded bg-purple-700 hover:bg-purple-800 focus:outline-none">
+                <FaUpload className="inline-block mr-2" />
+                Upload
+              </button>
+            </Link>
+          )}
+          {isLoggedIn && user && (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex flex-col items-center focus:outline-none"
+              >
+                <FaUserCircle className="text-white text-xl" />
+                {dropdownOpen ? (
+                  <FaChevronUp className="text-white mt-1 text-xs" />
+                ) : (
+                  <FaChevronDown className="text-white mt-1 text-xs" />
+                )}
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 top-full mt-1 w-48 bg-gray-800 rounded-md shadow-lg z-10 transform transition duration-300 ease-out animate-fadeIn">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-white hover:bg-purple-700"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Profil - {user.name || user.username || "User"}
+                  </Link>
+                  <Link
+                    to="/payment-method"
+                    className="block px-4 py-2 text-white hover:bg-purple-700"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Payment Method
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left block px-4 py-2 text-white hover:bg-purple-700"
+                  >
+                    Log Out
+                  </button>
+                </div>
               )}
-            </button>
-            {dropdownOpen && (
-              <div className="absolute right-0 top-full mt-1 w-48 bg-gray-800 rounded-md shadow-lg z-10 transform transition duration-300 ease-out animate-fadeIn">
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-white hover:bg-purple-700"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  Profil - {user.name || user.username || "User"}
-                </Link>
-                <Link
-                  to="/payment-method"
-                  className="block px-4 py-2 text-white hover:bg-purple-700"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  Payment Method
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left block px-4 py-2 text-white hover:bg-purple-700"
-                >
-                  Log Out
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </header>
 
       {/* Main Content */}
