@@ -59,17 +59,16 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <header className="fixed top-0 left-0 w-full p-4 text-white flex items-center justify-between z-50" 
               style={{ background: 'radial-gradient(circle at top right, #4b0082, #1c002c)' }}>
         <div className="flex items-center">
+          <FaUpload className="mr-2 text-xl" />
           <h1 className="text-2xl font-bold">Vidify Host</h1>
         </div>
         <div className="flex items-center">
-          {isLoggedIn && (
-            <Link to="/dashboard">
-              <button className="mr-4 px-4 py-2 rounded bg-purple-700 hover:bg-purple-800 focus:outline-none">
-                <FaUpload className="inline-block mr-2" />
-                Upload
-              </button>
-            </Link>
-          )}
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            className="mr-2 text-xl focus:outline-none"
+          >
+            <FaUpload />
+          </button>
           {isLoggedIn && user && (
             <div className="relative" ref={dropdownRef}>
               <button
@@ -154,10 +153,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         ) : (
           <nav className="fixed bottom-0 left-0 w-full p-4 flex justify-around items-center z-50" 
               style={{ background: 'radial-gradient(circle at bottom left, #4b0082, #1c002c)' }}>
-              <footer className="absolute bottom-0 left-0 w-full p-4 text-white text-center" 
-                      style={{ background: 'radial-gradient(circle at bottom left, #4b0082, #1c002c)' }}>
-                <p>© 2024 Vidify. All rights reserved.</p>
-              </footer>
+            <footer className="absolute bottom-0 left-0 w-full p-4 text-white text-center" 
+                    style={{ background: 'radial-gradient(circle at bottom left, #4b0082, #1c002c)' }}>
+              <p>© 2024 Vidify. All rights reserved.</p>
+            </footer>
           </nav>
         ))
       }
