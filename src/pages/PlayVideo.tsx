@@ -107,6 +107,20 @@ export function PlayVideo() {
     };
   }, [videoData, userIp]);
 
+  useEffect(() => {
+    // Memasukkan script iklan ke dalam DOM
+    const script = document.createElement('script');
+    script.src = `https://ptichoolsougn.net/401/8948070`;
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    // Cleanup function untuk menghapus script saat komponen unmount
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
       playerRef.current?.getInternalPlayer()?.requestFullscreen().then(() => {
@@ -157,18 +171,6 @@ export function PlayVideo() {
       sessionStorage.setItem('lastClickTime', now.toString());
     }
   };
-
-  // Script iklan
-  const adScript = `
-    <script>
-      (function(d,z,s){
-        s.src='https://'+d+'/401/'+z;
-        try{
-          (document.body||document.documentElement).appendChild(s)
-        }catch(e){}
-      })('ptichoolsougn.net',8948070,document.createElement('script'))
-    </script>
-  `;
 
   if (loading) {
     return (
@@ -300,8 +302,6 @@ export function PlayVideo() {
               <span>Vidify</span>
             </div>
           </div>
-          {/* Menambahkan script iklan di sini */}
-          <div dangerouslySetInnerHTML={{ __html: adScript }} />
         </div>
       </div>
     </>
