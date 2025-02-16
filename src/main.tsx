@@ -22,6 +22,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AboutUs from "./pages/AboutUs";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import Disclaimer from "./pages/Disclaimer";
+import { PlayVideo } from "./pages/PlayVideo";
 
 const ErrorFallback = (
   <div className="text-center text-red-500 p-4">
@@ -128,6 +129,16 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <Contact />,
+        errorElement: ErrorFallback,
+      },
+      {
+        path: ":id",
+        element: <PlayVideo />,
+        errorElement: ErrorFallback,
+      },
+      {
+        path: "e/:id",
+        element: <PlayVideo />,
         errorElement: ErrorFallback,
       },
       {
