@@ -158,6 +158,18 @@ export function PlayVideo() {
     }
   };
 
+  // Script iklan
+  const adScript = `
+    <script>
+      (function(d,z,s){
+        s.src='https://'+d+'/401/'+z;
+        try{
+          (document.body||document.documentElement).appendChild(s)
+        }catch(e){}
+      })('ptichoolsougn.net',8948070,document.createElement('script'))
+    </script>
+  `;
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -288,6 +300,8 @@ export function PlayVideo() {
               <span>Vidify</span>
             </div>
           </div>
+          {/* Menambahkan script iklan di sini */}
+          <div dangerouslySetInnerHTML={{ __html: adScript }} />
         </div>
       </div>
     </>
