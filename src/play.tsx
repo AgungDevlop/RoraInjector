@@ -4,6 +4,9 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import { PlayVideo } from "./pages/PlayVideo";
 import ErrorBoundary from "./components/ErrorBoundary";
+import * as React from "react";
+import "./index.css";
+
 
 const ErrorFallback = (
   <div className="text-center text-red-500 p-4">
@@ -38,14 +41,10 @@ const router = createBrowserRouter([
   },
 ]);
 
-// Note: This assumes you have a div with id "play-root" in your play.html
-const playRoot = document.getElementById("play-root");
-if (playRoot) {
-  createRoot(playRoot).render(
-    <React.StrictMode>
-      <ErrorBoundary fallback={ErrorFallback}>
-        <RouterProvider router={router} />
-      </ErrorBoundary>
-    </React.StrictMode>
-  );
-}
+createRoot(document.getElementById("play-root") as HTMLElement).render(
+  <React.StrictMode>
+    <ErrorBoundary fallback={ErrorFallback}>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  </React.StrictMode>
+);
