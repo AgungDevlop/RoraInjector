@@ -31,7 +31,8 @@ export function PlayVideo() {
   const randomLinks = [
   'https://aucmoartoas.com/4/8948209',
   'https://pk.octodekipper.com/iM9Z1gV287dBKeO/94691',
-  'https://likelyguy.com/b.3zVg0IPW3-pmv/b/mpVCJNZTDI0m2gMMDAcn2wMozOAxx/LBTuYAwzNrzkYIzLMQDJIk'
+  'https://likelyguy.com/b.3zVg0IPW3-pmv/b/mpVCJNZTDI0m2gMMDAcn2wMozOAxx/LBTuYAwzNrzkYIzLMQDJIk',
+  'https://www.effectiveratecpm.com/mq9nji1yb?key=566feec5e7d369956bdb7a53a074fec2'
   ];
 
   const fetchUserIp = async () => {
