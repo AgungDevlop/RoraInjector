@@ -35,7 +35,7 @@ export function PlayVideo() {
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`http://192.168.1.64:8080/api.php?short_key=${id}`, {
+        const response = await fetch(`https://api.videyhost.my.id/api.php?short_key=${id}`, {
           headers: {
             'Authorization': 'Bearer VideHost',
           },
