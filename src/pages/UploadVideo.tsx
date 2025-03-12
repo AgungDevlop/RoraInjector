@@ -13,8 +13,11 @@ const UploadVideo: React.FC = () => {
   // Batas maksimum ukuran file (100MB dalam byte)
   const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
-  // Function to generate a random shortlink with 10 characters
-  const generateShortlink = () => {
+  // API Token
+  const API_TOKEN = 'VideHost';
+
+  // Function to generate a random short_key with 10 characters
+  const generateShortKey = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
     for (let i = 0; i < 10; i++) {
@@ -23,10 +26,15 @@ const UploadVideo: React.FC = () => {
     return result;
   };
 
-  // Extract the title from the video filename and remove .mp4
-  const extractTitleFromFileName = (fileName: string) => {
+  // Extract the title from the video filename and remove extension
+  const extractFileName = (fileName: string) => {
     const nameWithoutExtension = fileName.split('.').slice(0, -1).join('.');
     return nameWithoutExtension;
+  };
+
+  // Format tanggal ke ISO string untuk database
+  const generateTanggal = () => {
+    return new Date().toISOString();
   };
 
   // Handle file selection with size validation
@@ -39,7 +47,7 @@ const UploadVideo: React.FC = () => {
         return;
       }
       setSelectedFile(file);
-      setError(null); // Reset error jika file valid
+      setError(null);
     }
   };
 
@@ -52,8 +60,8 @@ const UploadVideo: React.FC = () => {
     }
   };
 
-  // Handle video upload with size validation
-  const handleUpload = () => {
+  // Handle video upload
+  const handleUpload = async () => {
     if (!selectedFile) {
       setError('Pilih file video terlebih dahulu.');
       return;
@@ -67,13 +75,12 @@ const UploadVideo: React.FC = () => {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
+    const shortKey = generateShortKey();
+    const fileName = extractFileName(selectedFile.name);
+    const fileSize = selectedFile.size;
+
+    // Upload ke videy.co
     const xhr = new XMLHttpRequest();
-    const shortLink = generateShortlink();
-    const title = extractTitleFromFileName(selectedFile.name);
-
-    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    const user_id = user?.user_id;
-
     xhr.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) {
         const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -83,48 +90,51 @@ const UploadVideo: React.FC = () => {
 
     xhr.open('POST', 'https://videy.co/api/upload', true);
 
-    xhr.onload = () => {
+    xhr.onload = async () => {
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.responseText);
         if (response.id) {
           const videoUrl = `https://cdn.videy.co/${response.id}.mp4`;
           setUploadProgress(null);
 
+          // POST ke api.php
           const payload = {
-            shortlink: shortLink,
-            title: title,
-            user_id: user_id,
             video_url: videoUrl,
+            short_key: shortKey,
+            file_name: fileName,
+            size: fileSize,
+            tanggal: generateTanggal(),
           };
 
-          fetch('https://videyhost.my.id/api/videos', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.status === 'success') {
-                const host = window.location.host;
-                setShortlink(`https://${host}/e/${shortLink}`);
-                setSuccessMessage('Video berhasil diunggah!');
-                setTimeout(() => setSuccessMessage(null), 3000);
-              } else {
-                setError('Gagal mengunggah video.');
-              }
-            })
-            .catch((err) => {
-              console.error('Gagal menyimpan data:', err);
-              setError('Gagal menyimpan data ke server.');
+          try {
+            const res = await fetch('http://192.168.1.64:8080/api.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_TOKEN}`,
+              },
+              body: JSON.stringify(payload),
             });
+
+            const data = await res.json();
+            if (res.status === 201) {
+              const host = window.location.host;
+              setShortlink(`https://${host}/e/${shortKey}`);
+              setSuccessMessage('Video berhasil diunggah!');
+              setTimeout(() => setSuccessMessage(null), 3000);
+            } else {
+              setError(data.error || 'Gagal menyimpan data ke server.');
+            }
+          } catch (err) {
+            console.error('Gagal menyimpan data:', err);
+            setError('Gagal menyimpan data ke server.');
+          }
         } else {
           setError('Respons server tidak valid.');
           setUploadProgress(null);
         }
       } else {
-        setError('Gagal mengunggah video.');
+        setError('Gagal mengunggah video ke videy.co.');
         setUploadProgress(null);
       }
     };
@@ -192,7 +202,7 @@ const UploadVideo: React.FC = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M12 8v8m4-4H8m16 12V6a2 2 0 00-2-2H6a2 2 0 00-2 2v16a2 2 0 002 2h16a2 2 0 002-2z"
+                d="M12 8v8m4-4H8m16 12V6a2 2 0 00-2-2H6a2 0 00-2 2v16a2 2 0 002 2h16a2 0 002-2z"
               />
             </svg>
           </>

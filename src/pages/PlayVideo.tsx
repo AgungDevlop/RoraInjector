@@ -1,15 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaFastBackward, FaFastForward, FaCompress } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaShareAlt, FaFastBackward, FaFastForward, FaCompress, FaDownload } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
 
 interface VideoData {
-  video_id: number;
+  id: number;
   video_url: string;
-  title: string;
-  description?: string;
-  duration?: string;
+  file_name: string;
+  short_key: string;
+  size: number; // dalam bytes
+  tanggal: string;
 }
 
 export function PlayVideo() {
@@ -17,8 +18,6 @@ export function PlayVideo() {
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const hasAddedImpression = useRef<boolean>(false);
-  const [userIp, setUserIp] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.8);
@@ -27,54 +26,20 @@ export function PlayVideo() {
 
   const currentUrl = window.location.href;
 
-  // Array link untuk dibuka secara acak
-  const randomLinks = [
-  'https://aucmoartoas.com/4/8948209',
-  'https://pk.octodekipper.com/iM9Z1gV287dBKeO/94691',
-  'https://likelyguy.com/b.3zVg0IPW3-pmv/b/mpVCJNZTDI0m2gMMDAcn2wMozOAxx/LBTuYAwzNrzkYIzLMQDJIk',
-  'https://www.effectiveratecpm.com/mq9nji1yb?key=566feec5e7d369956bdb7a53a074fec2'
+  const adLinks = [
+    "https://example.com/ad1",
+    "https://example.com/ad2",
+    "https://example.com/ad3",
   ];
-
-  const fetchUserIp = async () => {
-    try {
-      const response = await fetch('https://api.ipify.org?format=json');
-      const data = await response.json();
-      setUserIp(data.ip);
-    } catch (error) {
-      console.error('Error fetching IP address:', error);
-      setUserIp('unknown');
-    }
-  };
-
-  const addImpression = async (type: 'play' | 'full_screen') => {
-    if (hasAddedImpression.current || !videoData?.video_id || !userIp) return;
-
-    try {
-      const response = await fetch('https://videyhost.my.id/api/impression', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videoId: videoData.video_id, userIp }),
-      });
-
-      if (response.ok) {
-        hasAddedImpression.current = true;
-        console.log(`Impression (${type}) berhasil ditambahkan`);
-      } else {
-        throw new Error(`Gagal menambahkan impression (${type})`);
-      }
-    } catch (error) {
-      console.error('Error adding impression:', error);
-    }
-  };
-
-  const recordFullScreen = async () => {
-    addImpression('full_screen');
-  };
 
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`https://videyhost.my.id/api/video/${id}`);
+        const response = await fetch(`http://192.168.1.64:8080/api.php?short_key=${id}`, {
+          headers: {
+            'Authorization': 'Bearer VideHost',
+          },
+        });
         if (!response.ok) {
           throw new Error('Video tidak ditemukan.');
         }
@@ -88,15 +53,11 @@ export function PlayVideo() {
     };
 
     fetchVideoData();
-    fetchUserIp();
   }, [id]);
 
   useEffect(() => {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
-      if (document.fullscreenElement) {
-        recordFullScreen();
-      }
     };
 
     document.addEventListener('fullscreenchange', handleFullScreenChange);
@@ -104,45 +65,21 @@ export function PlayVideo() {
     return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
     };
-  }, [videoData, userIp]);
-
-useEffect(() => {
-    // Memasukkan script iklan ke dalam DOM
-    const script = document.createElement('script');
-    script.src = `https://ptichoolsougn.net/401/8948070`;
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    // Menambahkan script baru di sini
-    const newScript = document.createElement('script');
-    newScript.innerHTML = `(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://naupsithizeekee.com/tag.min.js',8948243,document.body||document.documentElement)`;
-    document.body.appendChild(newScript);
-
-    // Cleanup function untuk menghapus script saat komponen unmount
-    return () => {
-      document.body.removeChild(script);
-      document.body.removeChild(newScript);
-    };
   }, []);
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
-      playerRef.current?.getInternalPlayer()?.requestFullscreen().then(() => {
-        handleLinkClick(); // Memastikan link dibuka saat masuk ke full screen
-      });
+      playerRef.current?.getInternalPlayer()?.requestFullscreen();
     } else {
-      document.exitFullscreen().then(() => {
-        handleLinkClick(); // Memastikan link dibuka saat keluar dari full screen
-      });
+      document.exitFullscreen();
     }
   };
 
   const shareVideo = () => {
     if (navigator.share) {
       navigator.share({
-        title: `Vidify - ${videoData?.title || 'Video'}`,
-        url: currentUrl
+        title: `Vide Host - ${videoData?.file_name || 'Video'}`,
+        url: currentUrl,
       }).catch((error) => console.error('Error sharing:', error));
     } else {
       alert('Share not supported on this browser. Copy the link manually.');
@@ -151,30 +88,42 @@ useEffect(() => {
 
   const seekBackward = () => {
     playerRef.current?.seekTo(playerRef.current.getCurrentTime() - 10, 'seconds');
-    handleLinkClick();
   };
 
   const seekForward = () => {
     playerRef.current?.seekTo(playerRef.current.getCurrentTime() + 10, 'seconds');
-    handleLinkClick();
   };
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
-    handleLinkClick(); // Memastikan link dibuka saat play/pause
-    if (!isPlaying) {
-      addImpression('play');
+  };
+
+  const handleDownload = () => {
+    if (videoData) {
+      sessionStorage.setItem('download_file_name', videoData.file_name);
+      sessionStorage.setItem('download_video_url', videoData.video_url);
+
+      const randomAdLink = adLinks[Math.floor(Math.random() * adLinks.length)];
+      window.open('/download', '_blank');
+      setTimeout(() => {
+        window.location.href = randomAdLink;
+      }, 500);
     }
   };
 
-  const handleLinkClick = () => {
-    const now = new Date().getTime();
-    const lastClick = sessionStorage.getItem('lastClickTime');
-    if (!lastClick || now - parseInt(lastClick) > 20000) {
-      const randomLink = randomLinks[Math.floor(Math.random() * randomLinks.length)];
-      window.open(randomLink, '_blank');
-      sessionStorage.setItem('lastClickTime', now.toString());
-    }
+  // Fungsi untuk mengkonversi ukuran file dari bytes ke format yang lebih mudah dibaca
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  // Fungsi untuk memformat tanggal menjadi "DD/MM/YYYY"
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
   if (loading) {
@@ -217,17 +166,11 @@ useEffect(() => {
   return (
     <>
       <Helmet>
-        <title>{`Vidify - ${videoData?.title || 'Video'}`}</title>
+        <title>{`Vide Host - ${videoData?.file_name || 'Video'}`}</title>
       </Helmet>
       <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
         <header className="w-full max-w-6xl px-4 py-6">
-          <h1 className="text-3xl font-bold mb-2 text-center break-words">{videoData?.title}</h1>
-          {videoData?.description && (
-            <p className="text-gray-400 text-center mb-4">{videoData.description}</p>
-          )}
-          {videoData?.duration && (
-            <p className="text-gray-500 text-sm text-center">Durasi: {videoData.duration}</p>
-          )}
+          <h1 className="text-3xl font-bold mb-2 text-center break-words">{videoData?.file_name}</h1>
         </header>
 
         <div className="w-full max-w-6xl px-4">
@@ -241,8 +184,6 @@ useEffect(() => {
               muted={isMuted}
               volume={volume}
               controls={false}
-              onPlay={() => { setIsPlaying(true); handleLinkClick(); }}
-              onPause={() => { setIsPlaying(false); handleLinkClick(); }}
               config={{
                 file: {
                   attributes: {
@@ -263,7 +204,7 @@ useEffect(() => {
                 <button onClick={() => setIsMuted(!isMuted)} className="hover:text-purple-300 transition-all">
                   {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
                 </button>
-                <input 
+                <input
                   type="range"
                   min={0}
                   max={1}
@@ -303,12 +244,31 @@ useEffect(() => {
                 </button>
               </div>
             </div>
-            <div className="absolute top-2 left-2 text-white text-xs p-1 bg-purple-800 rounded">
-              <span>Vidify</span>
+            {/* Watermark dan Ukuran File */}
+            <div className="absolute top-2 left-2 text-white text-xs p-1 bg-purple-800 rounded flex flex-col items-start">
+              <span>Vide Host</span>
+              <span>{videoData?.size ? formatFileSize(videoData.size) : 'N/A'}</span>
             </div>
+            {/* Tanggal di Pojok Kanan Atas */}
+            <div className="absolute top-2 right-2 text-white text-xs p-1 bg-purple-800 rounded">
+              <span>{formatDate(videoData?.tanggal || '')}</span>
+            </div>
+          </div>
+
+          {/* Tombol Download */}
+          <div className="mt-4 flex flex-col items-center">
+            <button
+              onClick={handleDownload}
+              className="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-all flex items-center justify-center"
+            >
+              <FaDownload className="mr-2" size={16} />
+              Download Video
+            </button>
           </div>
         </div>
       </div>
     </>
   );
 }
+
+export default PlayVideo;
