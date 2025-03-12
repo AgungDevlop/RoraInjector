@@ -107,7 +107,7 @@ const UploadVideo: React.FC = () => {
           };
 
           try {
-            const res = await fetch('http://192.168.1.64:8080/api.php', {
+            const res = await fetch('https://api.videyhost.my.id/api.php', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
