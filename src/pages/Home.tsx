@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import SplashAnimation from "../components/SplashAnimation";
-import Banner from "../components/Banner";
 
 interface Card {
   title: string;
@@ -127,7 +126,6 @@ const Home: React.FC = () => {
               }
             `}
           </style>
-          <Banner />
           <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] lg:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3 sm:gap-4">
             {cards.map((card) => (
               <div

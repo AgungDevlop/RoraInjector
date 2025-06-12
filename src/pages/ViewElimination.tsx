@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios, { AxiosError } from "axios";
-import { FaArrowRight } from "react-icons/fa";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 interface EliminationData {
   id: string;
@@ -84,7 +84,7 @@ const ViewElimination: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 text-white">
+    <div className="container mx-auto p-2 sm:p-3 text-white">
       <style>
         {`
           @keyframes pulse-ring {
@@ -109,7 +109,7 @@ const ViewElimination: React.FC = () => {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 4px solid transparent;
+            border: 3px solid transparent;
             border-top-color: #3b82f6;
             animation: pulse-ring 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
             position: absolute;
@@ -125,70 +125,70 @@ const ViewElimination: React.FC = () => {
           }
         `}
       </style>
-      <h1 className="text-4xl sm:text-4xl md:text-5xl font-extrabold text-blue-400 mb-6 sm:mb-8 md:mb-10 tracking-tight text-center drop-shadow-[0_2px_4px_rgba(59,130,246,0.8)]">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-400 mb-4 sm:mb-6 md:mb-8 tracking-tight text-center drop-shadow-[0_2px_4px_rgba(59,130,246,0.8)]">
         View Eliminations
       </h1>
 
-      <div className="mb-8">
+      <div className="mb-6">
         <input
           type="text"
           placeholder="Search by Elimination Name..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className="w-full bg-gray-900/50 border border-blue-400 text-blue-300 rounded-lg px-4 py-2 mb-4 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all duration-300 hover:shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+          className="w-full bg-gray-900/50 border border-blue-400 text-blue-300 rounded-lg px-3 py-1.5 mb-4 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all duration-300 hover:shadow-[0_0_10px_rgba(59,130,246,0.5)]"
         />
       </div>
 
       {error && (
-        <div className="mb-8 p-6 bg-red-900/60 text-red-200 rounded-lg text-base backdrop-blur-sm border border-red-400/50 animate-neon-pulse">
+        <div className="mb-6 p-3 bg-red-900/60 text-red-200 rounded-lg text-xs sm:text-sm backdrop-blur-sm border border-red-400/50 animate-neon-pulse">
           {error}
         </div>
       )}
 
       {isLoading ? (
         <div className="flex justify-center">
-          <div className="w-10 h-10 relative animate-ios-spinner">
-            <div className="absolute inset-0 rounded-full border-t-4 border-gray-400 opacity-20"></div>
-            <div className="absolute inset-0 rounded-full border-t-4 border-gray-400 animate-spin"></div>
+          <div className="w-6 h-6 relative animate-ios-spinner">
+            <div className="absolute inset-0 rounded-full border-t-2 border-gray-400 opacity-20"></div>
+            <div className="absolute inset-0 rounded-full border-t-2 border-gray-400 animate-spin"></div>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-4 sm:gap-6">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {filteredEliminations.length === 0 && !error && (
-            <p className="text-center text-blue-300 text-lg sm:text-xl">
+            <p className="text-center text-blue-300 text-sm sm:text-base">
               No eliminations found.
             </p>
           )}
           {filteredEliminations.map((elimination) => (
             <div
               key={elimination.id}
-              className="flex items-center justify-between bg-gradient-to-br from-gray-900 via-blue-950 to-purple-950 border-2 border-blue-400 rounded-tl-none rounded-tr-xl rounded-bl-xl rounded-br-none shadow-2xl p-3 sm:p-4 md:p-5 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(59,130,246,0.8)]"
+              className="flex items-center justify-between bg-gradient-to-br from-gray-900 via-blue-950 to-purple-950 border-2 border-blue-400 rounded-tl-none rounded-tr-xl rounded-bl-xl rounded-br-none shadow-2xl p-2 sm:p-3 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(59,130,246,0.8)]"
             >
-              <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+              <div className="flex items-center gap-1 sm:gap-2">
                 {!loadedImages.has(`${elimination.id}-img1`) && (
-                  <div className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 flex items-center justify-center">
+                  <div className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center">
                     <div className="custom-spinner"></div>
                   </div>
                 )}
                 <img
                   src={elimination.img1}
                   alt={`${elimination.name} img1`}
-                  className={`w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 object-cover rounded-full border-2 border-blue-400 animate-neon-pulse ${loadedImages.has(`${elimination.id}-img1`) ? '' : 'hidden'}`}
+                  className={`w-8 sm:w-10 h-8 sm:h-10 object-cover rounded-full border-2 border-blue-400 animate-neon-pulse ${loadedImages.has(`${elimination.id}-img1`) ? '' : 'hidden'}`}
                   loading="lazy"
                 />
-                <FaArrowRight className="text-blue-300 mx-1 text-lg sm:text-xl md:text-2xl animate-neon-pulse" />
+                <FaAngleDoubleRight className="text-blue-300 mx-1 text-sm sm:text-base animate-neon-pulse" />
                 {!loadedImages.has(`${elimination.id}-img2`) && (
-                  <div className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 flex items-center justify-center">
+                  <div className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center">
                     <div className="custom-spinner"></div>
                   </div>
                 )}
                 <img
                   src={elimination.img2}
                   alt={`${elimination.name} img2`}
-                  className={`w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 object-cover rounded-full border-2 border-blue-400 animate-neon-pulse ${loadedImages.has(`${elimination.id}-img2`) ? '' : 'hidden'}`}
+                  className={`w-8 sm:w-10 h-8 sm:h-10 object-cover rounded-full border-2 border-blue-400 animate-neon-pulse ${loadedImages.has(`${elimination.id}-img2`) ? '' : 'hidden'}`}
                   loading="lazy"
                 />
-                <h2 className="font-bold text-sm sm:text-base md:text-lg lg:text-xl text-blue-300 tracking-tight drop-shadow-[0_1px_2px_rgba(59,130,246,0.8)]">
+                <h2 className="font-bold text-xs sm:text-sm text-blue-300 tracking-tight drop-shadow-[0_1px_2px_rgba(59,130,246,0.8)]">
                   {elimination.name}
                 </h2>
               </div>
@@ -196,7 +196,7 @@ const ViewElimination: React.FC = () => {
                 href={elimination.url}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-gradient-to-r from-gray-900 via-blue-950 to-purple-950 text-blue-300 py-1.5 px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-5 rounded-lg text-sm sm:text-sm md:text-base font-semibold border border-blue-400 animate-neon-pulse hover:bg-gradient-to-r hover:from-blue-950 hover:via-purple-950 hover:to-gray-900 hover:shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(59,130,246,0.6)] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-all duration-300"
+                className="bg-gradient-to-r from-gray-900 via-blue-950 to-purple-950 text-blue-300 py-1 px-2 sm:py-1 sm:px-3 rounded-lg text-xs sm:text-sm font-semibold border border-blue-400 animate-neon-pulse hover:bg-gradient-to-r hover:from-blue-950 hover:via-purple-950 hover:to-gray-900 hover:shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(59,130,246,0.6)] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-all duration-300"
               >
                 Inject
               </a>
