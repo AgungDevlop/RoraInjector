@@ -198,7 +198,7 @@ return (
               rel="noreferrer"
               className="bg-gradient-to-r from-gray-900 via-blue-950 to-purple-950 text-blue-300 py-1 px-2 sm:py-1 sm:px-3 rounded-lg text-xs sm:text-sm font-semibold border border-blue-400 animate-neon-pulse hover:bg-gradient-to-r hover:from-blue-950 hover:via-purple-950 hover:to-gray-900 hover:shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(59,130,246,0.6)] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-all duration-300"
             >
-              Inject
+              Download
             </a>
           </div>
         ))}
