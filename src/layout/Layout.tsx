@@ -29,7 +29,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
         <div className="flex items-center group">
           <FaGamepad className="mr-2 text-3xl text-blue-300 border-2 border-blue-400 rounded-full p-1 animate-neon-pulse group-hover:text-blue-200 group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-300" />
           <h1 className="text-2xl font-extrabold tracking-tight text-blue-300 group-hover:text-blue-200 transition-colors duration-300 drop-shadow-[0_2px_4px_rgba(59,130,246,0.8)]">
-            Skin Tools ML
+            Rora New
           </h1>
         </div>
         <div className="flex items-center">
