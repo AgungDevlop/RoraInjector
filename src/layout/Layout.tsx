@@ -34,7 +34,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
         </div>
         <div className="flex items-center">
           <button
-            onClick={() => (window.location.href = 'https://www.tiktok.com/@yourusername')}
+            onClick={() => (window.location.href = 'https://www.tiktok.com/@hurle88?_t=ZS-8xTe5s2Wt6a&_r=1')}
             className="bg-gradient-to-r from-gray-900 via-blue-950 to-purple-950 text-blue-300 font-semibold p-2 rounded-xl border border-blue-400 animate-neon-pulse hover:bg-gradient-to-r hover:from-blue-950 hover:via-purple-950 hover:to-gray-900 hover:shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(59,130,246,0.6)] hover:scale-110 hover:animate-shake focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-all duration-300"
           >
             <FaTiktok className="text-xl" />
