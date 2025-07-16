@@ -102,7 +102,6 @@ const ViewHero: React.FC = () => {
 
   const handleViewClick = (heroName: string) => {
     sessionStorage.setItem("selectedHero", heroName);
-    // Open the direct link in a new tab
     window.open(directLink, "_blank");
   };
 
@@ -168,7 +167,7 @@ const ViewHero: React.FC = () => {
       <div className="mb-6">
         <input
           type="text"
-          placeholder="Search by Hero ortheria
+          placeholder="Search by Hero or Role"
           value={searchQuery}
           onChange={handleSearchChange}
           className="w-full bg-gray-900/50 border border-blue-400 text-blue-300 rounded-lg px-3 py-1.5 mb-4 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all duration-300 hover:shadow-[0_0_10px_rgba(59,130,246,0.5)]"
