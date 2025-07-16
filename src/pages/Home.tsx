@@ -11,7 +11,9 @@ interface Card {
 const Home: React.FC = () => {
   const [showSplash, setShowSplash] = useState(!sessionStorage.getItem("hasSeenSplash"));
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-  const timeoutRefs = useRef<Map<string, NodeJS.Timeout>>(new Map()); // Track timeouts per image
+  const timeoutRefs = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  const directLink = "https://obqj2.com/4/9577995"; // Your direct link
 
   const cards: Card[] = [
     {
@@ -46,37 +48,39 @@ const Home: React.FC = () => {
     },
   ];
 
-  // Preload images to check their load status
   useEffect(() => {
     cards.forEach((card) => {
       const img = new Image();
       img.src = card.image;
       img.onload = () => {
         setLoadedImages((prev) => new Set(prev).add(card.title));
-        clearTimeout(timeoutRefs.current.get(card.title)); // Clear timeout on load
+        clearTimeout(timeoutRefs.current.get(card.title));
       };
       img.onerror = () => {
-        setLoadedImages((prev) => new Set(prev).add(card.title)); // Mark as loaded on error
-        clearTimeout(timeoutRefs.current.get(card.title)); // Clear timeout on error
+        setLoadedImages((prev) => new Set(prev).add(card.title));
+        clearTimeout(timeoutRefs.current.get(card.title));
       };
 
-      // Set fallback timeout
       const timeout = setTimeout(() => {
         setLoadedImages((prev) => new Set(prev).add(card.title));
       }, 5000);
       timeoutRefs.current.set(card.title, timeout);
     });
 
-    // Cleanup timeouts on unmount
     return () => {
       timeoutRefs.current.forEach((timeout) => clearTimeout(timeout));
       timeoutRefs.current.clear();
     };
-  }, []); // Run only once on mount
+  }, []);
 
   const handleAnimationComplete = () => {
     setShowSplash(false);
     sessionStorage.setItem("hasSeenSplash", "true");
+  };
+
+  const handleButtonClick = () => {
+    // Open the direct link in a new tab
+    window.open(directLink, "_blank");
   };
 
   return (
@@ -156,7 +160,10 @@ const Home: React.FC = () => {
                     {card.title}
                   </h2>
                   <Link to={card.route}>
-                    <button className="w-full bg-gradient-to-r from-gray-900 via-blue-950 to-purple-950 text-blue-300 py-1.5 px-3 sm:py-1.5 sm:px-3 md:py-2 md:px-4 lg:py-2.5 lg:px-5 rounded-lg text-sm sm:text-sm md:text-base lg:text-lg font-semibold border border-blue-400 animate-neon-pulse hover:bg-gradient-to-r hover:from-blue-950 hover:via-purple-950 hover:to-gray-900 hover:shadow-[0_0_8px_rgba(59,130,246,0.8),0_0_15px_rgba(59,130,246,0.6)] hover:scale-105 hover:animate-shake focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-all duration-300">
+                    <button
+                      onClick={handleButtonClick}
+                      className="w-full bg-gradient-to-r from-gray-900 via-blue-950 to-purple-950 text-blue-300 py-1.5 px-3 sm:py-1.5 sm:px-3 md:py-2 md:px-4 lg:py-2.5 lg:px-5 rounded-lg text-sm sm:text-sm md:text-base lg:text-lg font-semibold border border-blue-400 animate-neon-pulse hover:bg-gradient-to-r hover:from-blue-950 hover:via-purple-950 hover:to-gray-900 hover:shadow-[0_0_8px_rgba(59,130,246,0.8),0_0_15px_rgba(59,130,246,0.6)] hover:scale-105 hover:animate-shake focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-all duration-300"
+                    >
                       View
                     </button>
                   </Link>
