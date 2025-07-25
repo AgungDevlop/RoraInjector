@@ -13,8 +13,6 @@ const Home: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const timeoutRefs = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-  const directLink = "https://obqj2.com/4/9577995"; // Your direct link
-
   const cards: Card[] = [
     {
       title: "Unlock Skin",
@@ -76,11 +74,6 @@ const Home: React.FC = () => {
   const handleAnimationComplete = () => {
     setShowSplash(false);
     sessionStorage.setItem("hasSeenSplash", "true");
-  };
-
-  const handleButtonClick = () => {
-    // Open the direct link in a new tab
-    window.open(directLink, "_blank");
   };
 
   return (
