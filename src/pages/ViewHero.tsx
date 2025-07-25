@@ -18,8 +18,7 @@ const ViewHero: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const timeoutRefs = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-  const directLink = "https://obqj2.com/4/9577995"; // Your direct link
-
+  
   const roleOptions = [
     "Fighter",
     "Tank",
@@ -102,7 +101,6 @@ const ViewHero: React.FC = () => {
 
   const handleViewClick = (heroName: string) => {
     sessionStorage.setItem("selectedHero", heroName);
-    window.open(directLink, "_blank");
   };
 
   const getImageUrl = (url: string): string => {
